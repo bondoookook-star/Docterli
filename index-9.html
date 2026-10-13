@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="mn">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Li Laboratories Mongolia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&amp;subset=cyrillic,latin&amp;display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+i[class*="fa-"]{display:inline-block;width:1em;height:1em;line-height:1;vertical-align:-.125em;font-style:normal}
+i[class*="fa-"]::before{content:"";display:block;width:100%;height:100%;background:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
+.fa-bars{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M3%206h18M3%2012h18M3%2018h18'/%3E%3C/svg%3E")}
+.fa-bag-shopping{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M6%202L3%206v14a2%202%200%200%200%202%202h14a2%202%200%200%200%202-2V6l-3-4zM3%206h18M16%2010a4%204%200%200%201-8%200'/%3E%3C/svg%3E")}
+.fa-location-dot{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M21%2010c0%207-9%2013-9%2013s-9-6-9-13a9%209%200%200%201%2018%200zM12%2013a3%203%200%201%200%200-6%203%203%200%200%200%200%206'/%3E%3C/svg%3E")}
+.fa-phone{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M22%2016.92v3a2%202%200%200%201-2.18%202%2019.8%2019.8%200%200%201-8.63-3.07%2019.5%2019.5%200%200%201-6-6%2019.8%2019.8%200%200%201-3.07-8.67A2%202%200%200%201%204.11%202h3a2%202%200%200%201%202%201.72c.13.96.36%201.9.7%202.81a2%202%200%200%201-.45%202.11L8.09%209.91a16%2016%200%200%200%206%206l1.27-1.27a2%202%200%200%201%202.11-.45c.91.34%201.85.57%202.81.7A2%202%200%200%201%2022%2016.92z'/%3E%3C/svg%3E")}
+.fa-magnifying-glass{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M11%2019a8%208%200%201%200%200-16%208%208%200%200%200%200%2016zM21%2021l-4.35-4.35'/%3E%3C/svg%3E")}
+.fa-xmark{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M18%206L6%2018M6%206l12%2012'/%3E%3C/svg%3E")}
+.fa-tag{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M20.59%2013.41l-7.17%207.17a2%202%200%200%201-2.83%200L2%2012V2h10l8.59%208.59a2%202%200%200%201%200%202.82zM7%207h.01'/%3E%3C/svg%3E")}
+.fa-star{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12%202l3.09%206.26L22%209.27l-5%204.87%201.18%206.88L12%2017.77l-6.18%203.25L7%2014.14%202%209.27l6.91-1.01z'/%3E%3C/svg%3E")}
+.fa-face-smile{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12%2022a10%2010%200%201%200%200-20%2010%2010%200%200%200%200%2020zM8%2014s1.5%202%204%202%204-2%204-2M9%209h.01M15%209h.01'/%3E%3C/svg%3E")}
+.fa-shield-heart{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12%2022s8-4%208-10V5l-8-3-8%203v7c0%206%208%2010%208%2010z'/%3E%3C/svg%3E")}
+.fa-shower{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12%202.69l5.66%205.66a8%208%200%201%201-11.31%200z'/%3E%3C/svg%3E")}
+.fa-wand-magic-sparkles{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12%203l1.9%205.1L19%2010l-5.1%201.9L12%2017l-1.9-5.1L5%2010l5.1-1.9zM19%2015l.8%202.2L22%2018l-2.2.8L19%2021l-.8-2.2L16%2018l2.2-.8z'/%3E%3C/svg%3E")}
+.fa-gem{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M6%203h12l4%206-10%2013L2%209zM2%209h20M12%2022L8%209l4-6%204%206z'/%3E%3C/svg%3E")}
+.fa-chevron-down{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M6%209l6%206%206-6'/%3E%3C/svg%3E")}
+.fa-image{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M21%2019V5a2%202%200%200%200-2-2H5a2%202%200%200%200-2%202v14a2%202%200%200%200%202%202h14a2%202%200%200%200%202-2zM8.5%2010a1.5%201.5%200%201%200%200-3%201.5%201.5%200%200%200%200%203zM21%2015l-5-5L5%2021'/%3E%3C/svg%3E")}
+.fa-cloud-arrow-up{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M16%2016l-4-4-4%204M12%2012v9M20.39%2018.39A5%205%200%200%200%2018%209h-1.26A8%208%200%201%200%203%2016.3'/%3E%3C/svg%3E")}
+.fa-lock{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M19%2011H5a2%202%200%200%200-2%202v7a2%202%200%200%200%202%202h14a2%202%200%200%200%202-2v-7a2%202%200%200%200-2-2zM7%2011V7a5%205%200%200%201%2010%200v4'/%3E%3C/svg%3E")}
+.fa-box-open{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M21%2016V8l-9-5-9%205v8l9%205zM3.3%207L12%2012l8.7-5M12%2022V12'/%3E%3C/svg%3E")}
+.fa-plus{--m:url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='black'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M12%205v14M5%2012h14'/%3E%3C/svg%3E")}
+</style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f8fafc;-webkit-tap-highlight-color:transparent}
+.cat-item.active{background:#0f172a!important;color:#fff!important;font-weight:700}
+body{font-family:Inter,-apple-system,"Segoe UI",Roboto,sans-serif;color:#172033}
+/* Contrast, touch targets, and mobile layout improvements */
+#sideMenuDrawer .cat-item{color:#273449!important;background:#fff;border:1px solid #e2e8f0;min-height:44px;font-size:13px}
+#sideMenuDrawer .cat-item.active{background:#0f172a!important;color:#fff!important;border-color:#0f172a}
+#sideMenuDrawer button{color:#273449}
+#sideMenuDrawer .cat-item.active{color:#fff!important}
+#adminPinModal input{min-height:48px;color:#111827}
+#adminPinModal button{min-height:46px;font-size:13px}
+button,input,textarea{touch-action:manipulation}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #94a3b8;outline-offset:2px}
+img{max-width:100%}
+.wrap{max-width:1200px;margin:0 auto;background:#fff;box-shadow:0 0 30px rgba(0,0,0,.06)}
+svg text[font-size="44"]{stroke:#0f172a;stroke-width:1.4px;paint-order:stroke}
+.admTab{min-width:30%}
+@media(min-width:768px){#defaultBannerContent{padding:3rem}#defaultBannerContent h2{font-size:2rem}#defaultBannerContent p{font-size:1rem}#pinnedBannerImg{max-height:380px}}
+/* Responsive storefront refinements */
+:root{color-scheme:light;--ink:#172033;--accent:#243b32;--line:#e8e9e5;--soft:#f7f8f5}
+html{scroll-behavior:smooth}body{background:#f4f5f2;color:var(--ink)}
+.wrap{max-width:1320px;box-shadow:0 12px 55px rgba(25,35,29,.08)}
+header{min-height:76px;gap:10px!important;padding-top:10px!important;padding-bottom:10px!important}
+header svg{width:clamp(210px,31vw,340px);height:auto;max-height:64px}
+header button,button{transition:transform .16s ease,background-color .16s ease,box-shadow .16s ease}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid rgba(100,130,110,.35);outline-offset:2px}
+#defaultBannerContent{background:linear-gradient(115deg,#17251f 0%,#2d473b 58%,#617363 100%)!important;padding:clamp(20px,4vw,44px)!important}
+#defaultBannerContent h2{letter-spacing:-.035em}
+#pinnedBannerImg{width:100%;max-height:420px;object-fit:cover}
+#productGrid{align-items:stretch;gap:clamp(10px,1.5vw,20px)!important}
+.product-card{min-width:0;border-radius:20px!important;padding:10px!important;box-shadow:0 2px 10px rgba(22,34,26,.035);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(22,34,26,.09);border-color:#cbd5cc}
+.product-image{background:#f5f6f2!important;cursor:pointer}
+.product-image img{transition:transform .35s ease}
+.product-card:hover .product-image img{transform:scale(1.035)}
+.product-name{font-size:clamp(12px,1.05vw,14px)!important;min-height:2.5em}
+.product-desc{font-size:11px!important;line-height:1.5!important;min-height:3em}
+.product-price{font-size:clamp(13px,1.1vw,16px)!important;white-space:nowrap}
+#searchInput{min-height:44px;font-size:13px;border-radius:14px;background:#fbfcfa}
+.cat-item{line-height:1.4}
+#cartDrawer>div{padding:clamp(16px,3vw,24px)}
+#checkoutModal>div,#payModal>div{max-height:calc(100dvh - 28px);overflow-y:auto}
+.admSec input,.admSec textarea,.admSec select{font-size:14px}
+#productDetailModal img{background:#f5f6f2}
+@media(max-width:480px){
+  .wrap{box-shadow:none}
+  header{padding-left:10px!important;padding-right:10px!important;min-height:66px}
+  header>div{gap:6px!important;min-width:0}
+  header svg{width:clamp(175px,54vw,235px);max-height:52px}
+  header button:last-child{padding:9px 11px!important}
+  #productGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .product-card{padding:8px!important;border-radius:16px!important}
+  .product-name{font-size:12px!important}
+  .product-desc{font-size:10px!important}
+  #shopMainView>div:nth-of-type(2){padding:12px!important}
+  #defaultBannerContent .pt-2{flex-wrap:wrap;gap:8px}
+  #defaultBannerContent .pt-2 span{font-size:10px}
+}
+@media(min-width:768px){#shopMainView>div:nth-of-type(2){padding:24px 30px!important}main.p-4{padding:28px 30px!important}}
+</style>
+ </head>
+ <body class="text-slate-800 pb-28">
+  <div id="shopMainView" class="wrap min-h-screen">
+   <div class="bg-slate-900 text-slate-300 text-[11px] py-2 px-3 text-center truncate">
+    Салбарын хаяг: <b class="text-white">Алтжин бөмбөгөр 1054 тоот</b> • 150,000₮-с дээш хүргэлт үнэгүй
+   </div>
+   <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 px-4 py-2.5 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+     <button type="button" onclick="toggleSideMenu()" class="text-slate-700 p-2 rounded-lg active:scale-95"><i class="fa-solid fa-bars text-xl"></i></button>
+     <div onclick="triggerAdminModal()" class="cursor-pointer select-none py-1 flex items-center">
+      <svg class="h-14 sm:h-16 md:h-[76px] w-auto max-w-[62vw] pointer-events-none" viewBox="0 0 360 85" fill="none" aria-label="Doctor Li Laboratories">
+       <text x="0" y="46" font-family="Arial,sans-serif" font-size="44" font-weight="900" fill="#0f172a">DOCTOR</text> <text x="178" y="46" font-family="Arial,sans-serif" font-size="44" font-weight="900" fill="#0f172a">LI</text> <rect x="230" y="15" width="14" height="14" rx="2" fill="#0f172a" /><rect x="248" y="15" width="14" height="14" rx="2" fill="#0f172a" /> <rect x="230" y="33" width="14" height="14" rx="2" fill="#0f172a" /><rect x="248" y="33" width="14" height="14" rx="2" fill="#0f172a" /> <text x="265" y="22" font-family="Arial" font-size="11" font-weight="bold" fill="#0f172a">®</text> <text x="2" y="74" font-family="Arial,sans-serif" font-size="19" font-weight="600" fill="#1e293b" letter-spacing="2">Laboratories</text> <text x="142" y="73" font-family="Arial,sans-serif" font-size="11" font-weight="600" fill="#475569">Experience the Difference</text>
+      </svg>
+     </div>
+    </div>
+    <button type="button" onclick="toggleCart()" class="flex items-center gap-1.5 bg-slate-100 text-slate-700 px-3.5 py-2 rounded-full text-xs font-bold border border-slate-300"><i class="fa-solid fa-bag-shopping text-xs"></i><span>Сагс</span> <span id="cartCount" class="bg-slate-800 text-white text-[10px] px-1.5 rounded-full">0</span></button>
+   </header>
+   <div class="p-4 space-y-3 bg-white">
+    <div class="overflow-hidden rounded-2xl shadow-sm border border-slate-100 min-h-[140px] flex items-center justify-center">
+     <img id="pinnedBannerImg" src="" style="display:none" class="w-full max-h-64 object-cover rounded-2xl">
+     <div id="defaultBannerContent" class="w-full bg-gradient-to-r from-slate-950 via-slate-900 to-slate-800 text-white p-5 rounded-2xl space-y-1.5">
+      <span class="inline-block bg-white/15 text-[10px] font-bold px-2 py-0.5 rounded-lg text-slate-200">✦ Албан ёсны салбар</span>
+      <h2 class="text-lg font-black leading-tight">Doctor Li • Koec • Leader</h2>
+      <p class="text-xs text-slate-300">Хүчтэй биш, харин ухаалаг арчилгаа. 1995 оноос хойших эмчилгээний чанар.</p>
+      <div class="pt-2 flex gap-3 text-[11px] text-slate-300">
+       <span><i class="fa-solid fa-location-dot"></i> Алтжин бөмбөгөр 1054</span> <span><i class="fa-solid fa-phone"></i> 9900 4024</span>
+      </div>
+     </div>
+    </div>
+    <div>
+     <div class="flex items-center justify-between mb-2">
+      <h3 id="currentCategoryTitle" class="text-sm font-black text-slate-900 truncate pr-2">Бүх бүтээгдэхүүн</h3>
+      <button type="button" onclick="toggleSideMenu()" class="text-xs text-slate-700 font-bold flex items-center gap-1 bg-slate-100 px-3 py-1.5 rounded-lg shrink-0">Ангилал <i class="fa-solid fa-bars text-[10px]"></i></button>
+     </div>
+     <div class="relative">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i> <input id="searchInput" oninput="renderShopProducts()" type="text" placeholder="Бүтээгдэхүүний нэрээр хайх..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs focus:outline-none focus:border-slate-800">
+     </div>
+    </div>
+   </div>
+   <main class="p-4 bg-slate-50 min-h-[350px]">
+    <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5"></div>
+   </main>
+  </div>
+  <!-- БҮТЭЭГДЭХҮҮНИЙ ДЭЛГЭРЭНГҮЙ -->
+  <div id="productDetailModal" style="display:none" class="fixed inset-0 z-[55] bg-black/60 items-center justify-center p-4" onclick="if(event.target===this)closeProductDetail()">
+   <div class="bg-white rounded-3xl max-w-lg w-full p-4 sm:p-5 space-y-3 max-h-[90dvh] overflow-y-auto">
+    <div class="flex items-center justify-between">
+     <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Doctor Li Laboratories</span>
+     <button onclick="closeProductDetail()" aria-label="Хаах" class="rounded-full bg-slate-100 w-9 h-9">✕</button>
+    </div>
+    <img id="detailProductImg" class="w-full aspect-square max-h-72 object-contain rounded-2xl" alt="Бүтээгдэхүүний зураг">
+    <div class="space-y-2">
+     <h3 id="detailProductName" class="font-black text-lg leading-snug"></h3>
+     <p id="detailProductDesc" class="text-sm text-slate-600 leading-relaxed whitespace-pre-line"></p>
+     <div class="flex items-center justify-between gap-3 border-t pt-3">
+      <span id="detailProductPrice" class="font-black text-xl"></span>
+      <button id="detailAddBtn" class="bg-slate-900 text-white px-5 py-3 rounded-xl text-sm font-bold">Сагсанд нэмэх</button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <!-- БИДНИЙ ТУХАЙ -->
+  <div id="aboutModal" style="display:none" class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+   <div class="bg-white rounded-3xl max-w-sm w-full p-6 space-y-3 text-[11px] text-slate-600 leading-relaxed max-h-[85vh] overflow-y-auto">
+    <div class="flex justify-between items-center border-b pb-3">
+     <h3 class="font-black text-sm text-slate-900">Бидний тухай • Doctor Li</h3>
+     <button onclick="closeAboutModal()" class="text-slate-500 text-base"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="bg-slate-900 text-white p-3.5 rounded-2xl">
+     <span class="text-[10px] font-bold text-slate-300 uppercase">Doctor Li Laboratories</span>
+     <h4 class="font-black text-xs">Шинжлэх ухаанд суурилсан арьс арчилгаа</h4>
+    </div>
+    <p><b>Doctor Li (李医生)</b> брэнд нь 1995 онд үүсгэн байгуулагдсан бөгөөд арьсны эрүүл мэнд, эмчилгээний үр дүнг нэгдүгээрт тавьдаг олон улсад хүлээн зөвшөөрөгдсөн дерматологийн брэнд юм.</p>
+    <p>Бид арьсны гүн давхаргад хүрч үйлчлэх байгалийн гаралтай цэвэр орц найрлага, дэвшилтэт технологийн хослолыг ашиглан арьсны асуудлыг (батгашилт, нүхжилт, сэвх толбо, хуурайшилт, үрчлээ) шинжлэх ухааны үндэслэлтэйгээр эмчлэх зорилготой.</p>
+    <p>Монгол дахь албан ёсны салбар <b>Алтжин бөмбөгөр худалдааны төвийн 1054 тоот лангуу</b>нд үйл ажиллагаагаа явуулж байна.</p>
+    <button onclick="closeAboutModal()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold text-xs">Хаах</button>
+   </div>
+  </div>
+  <!-- АДМИН PIN -->
+  <div id="adminPinModal" style="display:none" class="fixed inset-0 z-[999] bg-black/60 flex items-center justify-center p-4">
+   <div class="bg-white rounded-3xl max-w-xs w-full p-6 space-y-4 shadow-2xl text-center">
+    <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-lg">
+     <i class="fa-solid fa-lock"></i>
+    </div>
+    <div>
+     <h3 class="text-sm font-bold">Админ нэвтрэх</h3>
+     <p class="text-[11px] text-slate-400">PIN кодоо оруулна уу</p>
+    </div>
+    <input id="adminPinInput" type="password" maxlength="8" placeholder="••••" class="w-full text-center tracking-widest text-2xl font-black bg-slate-50 border border-slate-300 rounded-xl py-2.5 focus:outline-none" onkeydown="if(event.key==='Enter')verifyAdminPin()">
+    <div class="flex gap-2">
+     <button type="button" onclick="closeAdminPinModal()" class="w-1/2 border border-slate-200 text-slate-600 font-bold py-2.5 rounded-xl text-xs">Цуцлах</button>
+     <button type="button" onclick="verifyAdminPin()" class="w-1/2 bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs">Орох</button>
+    </div>
+   </div>
+  </div>
+  <!-- АДМИН -->
+  <div id="adminMainView" style="display:none" class="min-h-screen bg-slate-100 p-4 md:p-8 space-y-4 max-w-3xl mx-auto">
+   <div class="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between border">
+    <div>
+     <h2 class="font-black text-base">Админ самбар</h2>
+     <p class="text-[11px] text-slate-400">Doctor Li удирдлага</p>
+    </div>
+    <button type="button" onclick="closeAdminView()" class="bg-slate-900 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold">← Дэлгүүр</button>
+   </div>
+   <div class="flex flex-wrap gap-1.5 text-xs">
+    <button data-tab="products" onclick="switchAdminSection('products')" class="admTab flex-1 py-2 rounded-xl font-bold">Бараа</button>
+    <button data-tab="orders" onclick="switchAdminSection('orders')" class="admTab flex-1 py-2 rounded-xl font-bold">📦 Захиалга</button>
+    <button data-tab="banner" onclick="switchAdminSection('banner')" class="admTab flex-1 py-2 rounded-xl font-bold">📌 Баннер</button>
+    <button data-tab="payment" onclick="switchAdminSection('payment')" class="admTab flex-1 py-2 rounded-xl font-bold">💳 Төлбөр</button>
+    <button data-tab="pin" onclick="switchAdminSection('pin')" class="admTab flex-1 py-2 rounded-xl font-bold">🔑 PIN</button>
+   </div>
+   <div id="admSectionproducts" class="admSec space-y-4">
+    <div class="bg-white p-4 rounded-2xl shadow-sm border space-y-3 text-xs">
+     <h3 id="formModeTitle" class="font-bold">Шинэ бараа бүртгэх</h3>
+     <input id="prodNameInput" type="text" placeholder="Барааны нэр" class="w-full border rounded-xl p-2">
+     <div class="grid grid-cols-2 gap-2">
+      <input id="prodPriceInput" type="number" placeholder="Үнэ (₮)" class="border rounded-xl p-2"> <input id="prodBadgeInput" type="text" placeholder="Шошго (Шинэ, Best)" value="Шинэ" class="border rounded-xl p-2">
+     </div>
+     <div>
+      <label class="font-bold block mb-1 text-[11px]">Ангилал (олныг сонгож болно):</label>
+      <div id="catCheckboxes" class="grid grid-cols-2 gap-1.5 max-h-48 overflow-y-auto border p-2 rounded-xl bg-slate-50 text-[11px]"></div>
+     </div>
+     <label class="w-full border border-dashed rounded-xl p-2.5 flex items-center justify-center gap-2 cursor-pointer bg-slate-50"> <i class="fa-solid fa-image"></i><span>Зураг оруулах</span> <input type="file" accept="image/*" onchange="handleImageUpload(event)" class="hidden"> </label>
+     <div id="imagePreviewContainer" style="display:none" class="text-center">
+      <img id="imagePreview" class="w-16 h-16 object-cover rounded-xl mx-auto border">
+     </div>
+     <textarea id="prodDescInput" rows="2" placeholder="Барааны дэлгэрэнгүй тайлбар..." class="w-full border rounded-xl p-2"></textarea>
+     <button id="saveBtn" onclick="saveProductData()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold">Барааг хадгалах</button>
+     <button id="cancelEditBtn" style="display:none" onclick="resetProductForm()" class="w-full border py-2 rounded-xl font-bold text-slate-600">Засварыг цуцлах</button>
+    </div>
+    <div class="space-y-2" id="adminProductList"></div>
+   </div>
+   <div id="admSectionorders" style="display:none" class="admSec space-y-2">
+    <div id="adminOrdersList" class="space-y-2"></div>
+   </div>
+   <div id="admSectionbanner" style="display:none" class="admSec bg-white p-4 rounded-2xl shadow-sm border space-y-3 text-xs">
+    <h3 class="font-bold">Баннер зураг солих</h3>
+    <label class="w-full border border-dashed rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer bg-slate-50"> <i class="fa-solid fa-cloud-arrow-up text-xl text-slate-500"></i><span class="font-bold">Зураг сонгох</span> <input type="file" accept="image/*" onchange="handleBannerUpload(event)" class="hidden"> </label>
+    <div id="bannerPreviewContainer" style="display:none">
+     <img id="bannerPreview" class="w-full max-h-48 object-cover rounded-xl border">
+    </div>
+    <button onclick="savePinnedBanner()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold">Баннер хадгалах</button>
+    <button onclick="removePinnedBanner()" class="w-full border border-red-200 text-red-500 py-2 rounded-xl font-bold">Баннерыг арилгах</button>
+   </div>
+   <div id="admSectionpayment" style="display:none" class="admSec bg-white p-4 rounded-2xl shadow-sm border space-y-3 text-xs">
+    <h3 class="font-bold">Төлбөрийн мэдээлэл</h3>
+    <p class="text-slate-500">Хэрэглэгч захиалга өгсний дараа энэ QR болон дансыг харна.</p>
+    <label class="w-full border border-dashed rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer bg-slate-50"> <span class="font-bold">QR зураг оруулах (QPay / банкны QR)</span> <input type="file" accept="image/*" onchange="handlePayQr(event)" class="hidden"> </label> <img id="payQrPreview" style="display:none" class="w-40 h-40 object-contain mx-auto border rounded-xl"> <textarea id="payBanksInput" rows="4" placeholder="Мөр бүрд нэг данс: Банк | Данс | Нэр
+ХААНБАНК | 5111288917 | ОЮУНТУЯА" class="w-full border rounded-xl p-2"></textarea>
+    <button onclick="savePaymentSettings()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold">Хадгалах</button>
+   </div>
+   <div id="admSectionpin" style="display:none" class="admSec bg-white p-4 rounded-2xl shadow-sm border space-y-3 text-xs">
+    <h3 class="font-bold">PIN код солих</h3>
+    <input id="oldPinInput" type="password" placeholder="Одоогийн PIN" class="w-full border rounded-xl p-2"> <input id="newPinInput" type="password" placeholder="Шинэ PIN (4+ орон)" class="w-full border rounded-xl p-2"> <input id="confirmPinInput" type="password" placeholder="Шинэ PIN давтах" class="w-full border rounded-xl p-2">
+    <button onclick="changeAdminPin()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold">Хадгалах</button>
+   </div>
+  </div>
+  <!-- ЦЭС -->
+  <div id="sideMenuDrawer" style="display:none" class="fixed inset-0 z-50 bg-black/50" onclick="if(event.target===this)toggleSideMenu()">
+   <div class="absolute inset-y-0 left-0 w-[min(86vw,360px)] bg-white flex flex-col justify-between shadow-2xl">
+    <div class="overflow-y-auto flex-1 p-4 space-y-2.5">
+     <div class="flex items-center justify-between pb-3 border-b">
+      <h3 class="font-black text-sm">Бүтээгдэхүүний ангилал</h3>
+      <button onclick="toggleSideMenu()" class="text-slate-500 p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
+     </div>
+     <button data-key="all" onclick="selectCategory('all','Бүх бүтээгдэхүүн')" class="cat-item active w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-black bg-slate-100">✨ Бүх бүтээгдэхүүн</button>
+     <div id="menuAccordions" class="space-y-2.5"></div>
+    </div>
+    <div class="p-4 border-t bg-slate-50">
+     <button onclick="toggleSideMenu();openAboutModal()" class="w-full py-3 bg-slate-900 text-white font-bold rounded-xl text-xs">ℹ️ Бидний тухай</button>
+    </div>
+   </div>
+  </div>
+  <!-- САГС -->
+  <div id="cartDrawer" style="display:none" class="fixed inset-0 z-50 bg-black/50">
+   <div class="absolute inset-y-0 right-0 w-screen max-w-sm bg-white flex flex-col justify-between shadow-2xl p-4">
+    <div class="flex items-center justify-between pb-3 border-b">
+     <h3 class="font-bold text-sm">Таны сагс</h3>
+     <button onclick="toggleCart()"><i class="fa-solid fa-xmark text-lg"></i></button>
+    </div>
+    <div id="cartItemsList" class="space-y-2 overflow-y-auto flex-1 py-3"></div>
+    <div class="border-t pt-3 space-y-2">
+     <div class="flex justify-between text-xs text-slate-500">
+      <span>Барааны дүн</span><span id="cartSubtotal">0₮</span>
+     </div>
+     <div class="flex justify-between text-xs text-slate-500">
+      <span>Хүргэлт</span><span id="cartDelivery">7,000₮</span>
+     </div>
+     <p id="deliveryHint" class="text-[10px] text-emerald-700">150,000₮-с дээш захиалгад хүргэлт үнэгүй.</p>
+     <div class="flex justify-between font-black text-sm border-t pt-2">
+      <span>Нийт төлөх дүн:</span><span id="cartTotal">0₮</span>
+     </div>
+     <button onclick="openCheckoutModal()" class="w-full bg-slate-900 text-white font-bold py-3 rounded-xl text-xs">Захиалах</button>
+    </div>
+   </div>
+  </div>
+  <!-- ТӨЛБӨР -->
+  <div id="payModal" style="display:none" class="fixed inset-0 z-[60] bg-black/60 items-center justify-center p-4 overflow-y-auto">
+   <div class="bg-white rounded-3xl max-w-md w-full p-5 space-y-3 text-xs my-auto">
+    <div class="flex justify-between border-b pb-2 font-bold text-sm">
+     <span>Төлбөр шилжүүлэх</span>
+     <button onclick="closePay()">✕</button>
+    </div>
+    <div class="bg-slate-50 border rounded-2xl p-4 text-center">
+     <p class="text-slate-500">Шилжүүлэх дүн</p>
+     <p id="payAmount" class="text-2xl font-black"></p>
+     <p class="mt-1">Гүйлгээний утга: <b id="payRef" class="border bg-white px-2 py-0.5 rounded"></b></p>
+    </div>
+    <img id="payQr" style="display:none" class="w-48 h-48 object-contain mx-auto border rounded-xl">
+    <div id="payBanks" class="space-y-2"></div>
+    <p class="text-slate-500 text-center">Шилжүүлсний дараа бид захиалгыг баталгаажуулж тантай холбогдоно.</p>
+    <button onclick="closePay()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold">Ойлголоо</button>
+   </div>
+  </div>
+  <!-- ЗАХИАЛГА -->
+  <div id="checkoutModal" style="display:none" class="fixed inset-0 z-50 bg-black/60 items-center justify-center p-4">
+   <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 text-xs">
+    <div class="flex justify-between border-b pb-2 font-bold">
+     <span>Захиалга өгөх</span>
+     <button onclick="closeCheckoutModal()">✕</button>
+    </div>
+    <form onsubmit="handleOrderSubmit(event)" class="space-y-2">
+     <input id="ordName" required placeholder="Нэр" class="w-full border rounded-xl p-2"> <input id="ordPhone" required type="tel" placeholder="Утас" class="w-full border rounded-xl p-2"> <textarea id="ordAddress" required rows="2" placeholder="Хаяг" class="w-full border rounded-xl p-2"></textarea>
+     <button id="ordBtn" type="submit" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold">Баталгаажуулах</button>
+    </form>
+   </div>
+  </div>
+  <script>
+// ===== SUPABASE ТОХИРГОО =====
+const SUPABASE_URL = "https://iixydgieinyfdnhofjf.supabase.co";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_PUBLISHABLE_KEY_HERE";
+const { createClient } = window.supabase;
+const supabaseKeyConfigured = SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes("PASTE_YOUR_");
+const db = supabaseKeyConfigured ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const ensureDb = () => {
+  if (!db) throw new Error("Supabase-ийн Publishable key оруулаагүй байна. HTML доторх SUPABASE_ANON_KEY утгыг Supabase Dashboard > Connect хэсгийн key-ээр солино уу.");
+};
+const dbErr = e => { console.error(e); alert("Supabase өгөгдлийн сангийн алдаа: " + (e?.message || e)); };
+async function getSetting(key) {
+  ensureDb();
+  const { data, error } = await db.from("site_settings").select("value").eq("key", key).maybeSingle();
+  if (error) throw error;
+  return data ? data.value : null;
+}
+async function setSetting(key, value) {
+  ensureDb();
+  const { error } = await db.from("site_settings").upsert({ key, value }, { onConflict: "key" });
+  if (error) throw error;
+}
+function normalizeProduct(row) {
+  return { ...row, id: String(row.id), img: row.img || row.image_url || DEFAULT_IMG, desc: row.desc || row.description || "", createdAt: row.created_at || row.createdAt || null };
+}
+function normalizeOrder(row) {
+  const rawItems = row.items;
+  const itemsText = Array.isArray(rawItems) ? rawItems.map(x => `${x.name || x.product_name || "Бараа"} (${x.qty || x.quantity || 1}ш)`).join(", ") : String(rawItems || "");
+  return { ...row, id: String(row.id), name: row.customer_name || row.name || "", itemsText, subtotal: Number(row.subtotal ?? 0), deliveryFee: Number(row.delivery_fee ?? row.deliveryFee ?? 0), total: Number(row.total_price ?? row.total ?? 0), paid: !!row.paid };
+}
+async function refreshProducts() {
+  ensureDb();
+  const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
+  if (error) throw error;
+  products = (data || []).map(normalizeProduct);
+  renderShopProducts();
+  if ($("adminMainView").style.display !== "none") renderAdminList();
+}
+async function refreshOrders() {
+  ensureDb();
+  const { data, error } = await db.from("orders").select("*").order("created_at", { ascending: false });
+  if (error) throw error;
+  orders = (data || []).map(normalizeOrder);
+  renderAdminOrders();
+}
+
+const CATS = [
+  ["menuBrand","Брэнд","fa-solid fa-tag",[["brand_doctorli","Doctor Li"],["brand_koec","Koec"],["brand_leader","Leader"]]],
+  ["menuSkin","Арьс арчилгаа","fa-regular fa-star",[["skin_sunscreen","Нарны тос"],["skin_cleanse","Цэвэрлэгч / Саван"],["skin_scrub","Гуужуулагч"],["skin_toner","Тонер"],["skin_pad","Пэд"],["skin_mist","Мист / Цацлага"],["skin_serum","Серум"],["skin_eyecream","Зовхны тос"],["skin_cream","Нүүрний тос"],["skin_gel","Гель"],["skin_lipbalm","Уруулын бальзам"],["skin_men","Эрэгтэй арьс арчилгаа"]]],
+  ["menuMasks","Маск","fa-regular fa-face-smile",[["mask_clay","Шавар маск"],["mask_sheet","Салфеткан маск"],["mask_eye","Зовхны маск"]]],
+  ["menuProblem","Арьсны асуудал","fa-solid fa-shield-heart",[["prob_acne","Батгашилт"],["prob_pore","Нүхжилт"],["prob_spot","Сэвх нөсөө толбо"],["prob_wrinkle","Үрчлээ"],["prob_dry","Хуурайшилт"]]],
+  ["menuBody","Бие арчилгаа","fa-solid fa-shower",[["body_wash","Бие угаагч"],["body_scrub","Биеийн гуужуулагч"],["body_lotion","Биеийн тос"],["body_handcream","Гарын тос"]]],
+  ["menuHair","Үс арчилгаа","fa-solid fa-wand-magic-sparkles",[["shampoo","Шампунь"],["conditioner","Ангижруулагч"],["hair_mask","Үсний маск"]]],
+  ["menuAcc","Дагалдах хэрэгсэл","fa-solid fa-gem",[["cotton","Хөвөн"],["massage_comb","Массажны сам"]]]
+];
+const DEFAULT_IMG = "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500";
+
+let products = [], orders = [], cart = [];
+let currentCategory = "all", uploadedImageData = "", tempBannerData = "", editId = null, ordersUnsub = null;
+let adminPin = "1054";
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt = n => Number(n || 0).toLocaleString() + "₮";
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+
+// ---- Цэс, ангиллыг JS-ээс үүсгэнэ ----
+function buildCategories() {
+  $("menuAccordions").innerHTML = CATS.map(([id, title, icon, items]) => `
+    <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
+      <button type="button" onclick="toggleMenuAccordion('${id}')" class="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold hover:bg-slate-50">
+        <span class="flex items-center gap-2"><i class="${icon}"></i> ${title}</span>
+        <i id="${id}Icon" class="fa-solid fa-chevron-down text-[10px] text-slate-500 transition-transform"></i>
+      </button>
+      <div id="${id}" style="display:none" class="border-t bg-slate-50 px-2 py-1.5 space-y-1">
+        ${items.map(([k, n]) => `<button data-key="${k}" onclick="selectCategory('${k}','${n}')" class="cat-item w-full text-left px-3 py-1.5 rounded-lg text-xs font-bold text-slate-800 hover:bg-white">${n}</button>`).join("")}
+      </div>
+    </div>`).join("");
+  $("catCheckboxes").innerHTML = CATS.flatMap(c => c[3]).map(([k, n]) =>
+    `<label><input type="checkbox" name="catOption" value="${k}"> ${n}</label>`).join("");
+}
+
+// ---- Админ нэвтрэлт ----
+let clickCount = 0, clickTimer = null;
+function triggerAdminModal() {
+  clickCount++; clearTimeout(clickTimer);
+  clickTimer = setTimeout(() => clickCount = 0, 800);
+  if (clickCount >= 3) { clickCount = 0; openAdminPinModal(); }
+}
+function openAboutModal() { $("aboutModal").style.display = "flex"; }
+function closeAboutModal() { $("aboutModal").style.display = "none"; }
+function openAdminPinModal() { $("adminPinModal").style.display = "flex"; $("adminPinInput").value = ""; $("adminPinInput").focus(); }
+function closeAdminPinModal() { $("adminPinModal").style.display = "none"; }
+$("adminPinInput").addEventListener("keydown", e => { if (e.key === "Enter") verifyAdminPin(); });
+
+async function verifyAdminPin() {
+  const input = $("adminPinInput"), val = input.value.trim();
+  if (!val) { alert("PIN кодоо оруулна уу."); input.focus(); return; }
+  try {
+    const savedPin = await getSetting("admin_pin");
+    adminPin = savedPin ? String(savedPin) : "1054";
+  } catch (e) { dbErr(e); return; }
+  if (val !== adminPin) { alert("PIN код буруу байна!"); input.value = ""; input.focus(); return; }
+  closeAdminPinModal();
+  $("shopMainView").style.display = "none";
+  $("adminMainView").style.display = "block";
+  switchAdminSection("products");
+  renderAdminList();
+  try { await refreshOrders(); } catch (e) { dbErr(e); }
+}
+function closeAdminView() {
+  $("adminMainView").style.display = "none";
+  $("shopMainView").style.display = "block";
+  ordersUnsub = null; orders = [];
+  resetProductForm();
+  renderShopProducts();
+}
+function switchAdminSection(sec) {
+  document.querySelectorAll(".admSec").forEach(e => e.style.display = e.id === "admSection" + sec ? "block" : "none");
+  document.querySelectorAll(".admTab").forEach(b => {
+    b.className = "admTab flex-1 py-2 rounded-xl font-bold " + (b.dataset.tab === sec ? "bg-slate-900 text-white" : "bg-white text-slate-700 border");
+  });
+}
+async function changeAdminPin() {
+  const o = $("oldPinInput").value.trim(), n = $("newPinInput").value.trim(), c = $("confirmPinInput").value.trim();
+  if (o !== adminPin) return alert("Одоогийн PIN код буруу!");
+  if (n.length < 4) return alert("Шинэ PIN доод тал нь 4 оронтой байна!");
+  if (n !== c) return alert("Шинэ PIN хоорондоо таарахгүй байна!");
+  try { await setSetting("admin_pin", n); } catch (e) { return dbErr(e); }
+  adminPin = n;
+  alert("PIN амжилттай солигдлоо!");
+  ["oldPinInput", "newPinInput", "confirmPinInput"].forEach(i => $(i).value = "");
+  switchAdminSection("products");
+}
+
+// ---- Зураг, баннер ----
+function compressImage(file, maxWidth, quality, cb) {
+  const r = new FileReader();
+  r.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      const c = document.createElement("canvas"); c.width = w; c.height = h;
+      c.getContext("2d").drawImage(img, 0, 0, w, h);
+      cb(c.toDataURL("image/jpeg", quality));
+    };
+    img.src = e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+function handleBannerUpload(e) {
+  const f = e.target.files[0]; if (!f) return;
+  compressImage(f, 1000, 0.7, d => { tempBannerData = d; $("bannerPreview").src = d; $("bannerPreviewContainer").style.display = "block"; });
+}
+function handleImageUpload(e) {
+  const f = e.target.files[0]; if (!f) return;
+  compressImage(f, 600, 0.7, d => { uploadedImageData = d; $("imagePreview").src = d; $("imagePreviewContainer").style.display = "block"; });
+}
+async function savePinnedBanner() {
+  if (!tempBannerData) return alert("Эхлээд зургаа сонгоно уу!");
+  try { await setSetting("banner", { img: tempBannerData }); } catch (e) { return dbErr(e); }
+  tempBannerData = ""; $("bannerPreviewContainer").style.display = "none";
+  alert("Баннер амжилттай солигдлоо!"); closeAdminView();
+}
+async function removePinnedBanner() {
+  try { const { error } = await db.from("site_settings").delete().eq("key", "banner"); if (error) throw error; } catch (e) { return dbErr(e); }
+  alert("Баннер арилгагдлаа."); closeAdminView();
+}
+function applyBanner(img) {
+  $("pinnedBannerImg").src = img || "";
+  $("pinnedBannerImg").style.display = img ? "block" : "none";
+  $("defaultBannerContent").style.display = img ? "none" : "block";
+}
+
+// ---- Дэлгүүр ----
+function renderShopProducts() {
+  const q = ($("searchInput").value || "").trim().toLowerCase();
+  const list = products.filter(p => {
+    const cats = (p.category || "").toLowerCase().split(",").map(c => c.trim());
+    return (currentCategory === "all" || cats.includes(currentCategory)) && (!q || (p.name || "").toLowerCase().includes(q));
+  });
+  $("productGrid").innerHTML = list.length ? list.map(p => `
+    <article class="product-card bg-white border border-slate-200 overflow-hidden flex flex-col justify-between">
+      <button type="button" class="product-image relative aspect-square rounded-xl overflow-hidden mb-3 w-full" onclick="openProductDetail('${p.id}')" aria-label="${esc(p.name)} дэлгэрэнгүй харах">
+        <img src="${esc(p.img || DEFAULT_IMG)}" alt="${esc(p.name)}" loading="lazy" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='${DEFAULT_IMG}'">
+        ${p.badge ? `<span class="absolute top-2 left-2 bg-white/95 text-slate-800 text-[9px] font-bold px-2.5 py-1 rounded-full shadow-sm">${esc(p.badge)}</span>` : ""}
+      </button>
+      <div class="flex-1 cursor-pointer" onclick="openProductDetail('${p.id}')"><p class="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-1">Doctor Li Laboratories</p><h4 class="product-name font-bold leading-snug line-clamp-2">${esc(p.name)}</h4>
+        <p class="product-desc text-slate-500 mt-1 line-clamp-2">${esc(p.desc || "Дэлгэрэнгүй мэдээлэл авахын тулд дарна уу.")}</p></div>
+      <div class="flex items-center justify-between gap-2 pt-3 mt-3 border-t border-slate-100">
+        <span class="product-price font-black">${fmt(p.price)}</span>
+        <button aria-label="${esc(p.name)} сагсанд нэмэх" onclick="addToCart('${p.id}')" class="bg-slate-900 hover:bg-emerald-900 text-white min-w-9 h-9 px-2 rounded-xl flex items-center justify-center active:scale-95"><i class="fa-solid fa-plus text-xs"></i></button>
+      </div>
+    </article>`).join("")
+    : `<div class="col-span-full py-16 text-center text-slate-400 text-xs"><i class="fa-solid fa-box-open text-2xl mb-2 text-slate-300 block"></i>Энэ ангилалд одоогоор бараа ороогүй байна.</div>`;
+}
+function openProductDetail(id) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  $("detailProductImg").src = p.img || DEFAULT_IMG;
+  $("detailProductImg").alt = p.name || "Бүтээгдэхүүн";
+  $("detailProductName").innerText = p.name || "Бүтээгдэхүүн";
+  $("detailProductDesc").innerText = p.desc || "Одоогоор дэлгэрэнгүй тайлбар оруулаагүй байна.";
+  $("detailProductPrice").innerText = fmt(p.price);
+  $("detailAddBtn").onclick = () => { addToCart(id); closeProductDetail(); };
+  $("productDetailModal").style.display = "flex";
+}
+function closeProductDetail() { $("productDetailModal").style.display = "none"; }
+
+function selectCategory(key, title) {
+  currentCategory = key.toLowerCase();
+  $("currentCategoryTitle").innerText = title;
+  document.querySelectorAll(".cat-item").forEach(i => i.classList.toggle("active", i.dataset.key === key));
+  toggleSideMenu(); renderShopProducts();
+}
+function toggleSideMenu() { const d = $("sideMenuDrawer"); d.style.display = d.style.display === "none" ? "block" : "none"; }
+function toggleMenuAccordion(id) {
+  const el = $(id), hidden = el.style.display === "none";
+  el.style.display = hidden ? "block" : "none";
+  $(id + "Icon").style.transform = hidden ? "rotate(180deg)" : "";
+}
+
+// ---- Админ: бараа (нэмэх / засах / устгах) ----
+function renderAdminList() {
+  $("adminProductList").innerHTML = products.map(p => `
+    <div class="flex items-center justify-between p-2.5 bg-white rounded-xl border text-xs gap-2">
+      <img src="${esc(p.img)}" class="w-10 h-10 object-cover rounded-lg border">
+      <div class="flex-1 truncate font-bold">${esc(p.name)}</div>
+      <div class="font-black">${fmt(p.price)}</div>
+      <button onclick="editProduct('${p.id}')" class="text-blue-600 font-bold px-2 py-1 bg-blue-50 rounded">Засах</button>
+      <button onclick="deleteProduct('${p.id}')" class="text-red-500 font-bold px-2 py-1 bg-red-50 rounded">Устгах</button>
+    </div>`).join("");
+}
+function editProduct(id) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  editId = id; uploadedImageData = "";
+  $("prodNameInput").value = p.name || "";
+  $("prodPriceInput").value = p.price || "";
+  $("prodBadgeInput").value = p.badge || "";
+  $("prodDescInput").value = p.desc || "";
+  const cats = (p.category || "").split(",").map(c => c.trim());
+  document.querySelectorAll("input[name='catOption']").forEach(c => c.checked = cats.includes(c.value));
+  $("imagePreview").src = p.img; $("imagePreviewContainer").style.display = "block";
+  $("formModeTitle").innerText = "Барааг засах";
+  $("saveBtn").innerText = "Өөрчлөлтийг хадгалах";
+  $("cancelEditBtn").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function resetProductForm() {
+  editId = null; uploadedImageData = "";
+  ["prodNameInput", "prodPriceInput", "prodDescInput"].forEach(i => $(i).value = "");
+  $("prodBadgeInput").value = "Шинэ";
+  document.querySelectorAll("input[name='catOption']").forEach(c => c.checked = false);
+  $("imagePreviewContainer").style.display = "none";
+  $("formModeTitle").innerText = "Шинэ бараа бүртгэх";
+  $("saveBtn").innerText = "Барааг хадгалах";
+  $("cancelEditBtn").style.display = "none";
+}
+async function saveProductData() {
+  const name = $("prodNameInput").value.trim(), price = Number($("prodPriceInput").value);
+  if (!name || !price) return alert("Нэр болон үнийг оруулна уу!");
+  const cats = Array.from(document.querySelectorAll("input[name='catOption']:checked")).map(c => c.value).join(",");
+  const data = { name, price, description: $("prodDescInput").value.trim(), badge: $("prodBadgeInput").value.trim(), category: cats || "brand_doctorli", updated_at: new Date().toISOString() };
+  if (uploadedImageData) data.image_url = uploadedImageData;
+  $("saveBtn").disabled = true;
+  try {
+    if (editId) {
+      const { error } = await db.from("products").update(data).eq("id", editId);
+      if (error) throw error;
+      alert("Бараа амжилттай шинэчлэгдлээ!");
+    } else {
+      data.image_url = uploadedImageData || DEFAULT_IMG;
+      const { error } = await db.from("products").insert(data);
+      if (error) throw error;
+      alert("Шинэ бараа амжилттай нэмэгдлээ!");
+    }
+    await refreshProducts();
+    resetProductForm();
+  } catch (e) { dbErr(e); }
+  $("saveBtn").disabled = false;
+}
+async function deleteProduct(id) {
+  if (!confirm("Энэ барааг устгах уу?")) return;
+  try {
+    const { error } = await db.from("products").delete().eq("id", id);
+    if (error) throw error;
+    await refreshProducts();
+  } catch (e) { dbErr(e); }
+}
+
+// ---- Админ: захиалга ----
+function renderAdminOrders() {
+  $("adminOrdersList").innerHTML = orders.length ? orders.map(o => `
+    <div class="bg-white p-3 rounded-xl border text-xs space-y-1">
+      <div class="font-bold flex justify-between"><span>👤 ${esc(o.name)}</span><a href="tel:${esc(o.phone)}" class="text-blue-600">📞 ${esc(o.phone)}</a></div>
+      <div class="text-slate-500">📍 ${esc(o.address)}</div>
+      <div class="bg-slate-50 p-2 rounded text-[11px] font-medium">${esc(o.itemsText)}</div>
+      <div class="text-slate-500">Бараа: ${fmt(o.subtotal)} • Хүргэлт: ${o.deliveryFee ? fmt(o.deliveryFee) : "Үнэгүй"}</div>
+      <div class="flex justify-between font-black pt-1 border-t"><span>${fmt(o.total)}</span><span class="flex gap-3"><button onclick="togglePaid('${o.id}',${!o.paid})" class="${o.paid ? 'text-green-600' : 'text-amber-600'} font-bold">${o.paid ? '✓ Төлсөн' : 'Төлөөгүй'}</button><button onclick="deleteOrder('${o.id}')" class="text-red-500 font-bold">Устгах</button></span></div>
+    </div>`).join("") : `<div class="text-center py-8 text-slate-400 text-xs">Одоогоор захиалга байхгүй байна.</div>`;
+}
+async function deleteOrder(id) {
+  if (!confirm("Захиалгыг устгах уу?")) return;
+  try { const { error } = await db.from("orders").delete().eq("id", id); if (error) throw error; await refreshOrders(); } catch (e) { dbErr(e); }
+}
+
+// ---- Сагс ----
+function addToCart(id) {
+  const p = products.find(x => x.id === id); if (!p) return;
+  const ex = cart.find(x => x.id === id);
+  if (ex) ex.qty++; else cart.push({ id: p.id, name: p.name, price: p.price, qty: 1 });
+  lsSet("doctor_li_persistent_cart", cart); updateCartUI();
+}
+function changeQty(id, d) {
+  const i = cart.find(x => x.id === id); if (!i) return;
+  i.qty += d; if (i.qty <= 0) cart = cart.filter(x => x.id !== id);
+  lsSet("doctor_li_persistent_cart", cart); updateCartUI();
+}
+function updateCartUI() {
+  $("cartCount").innerText = cart.reduce((s, i) => s + i.qty, 0);
+  $("cartItemsList").innerHTML = cart.length ? cart.map(i => `
+    <div class="flex justify-between items-center text-xs p-2 bg-slate-50 rounded-xl gap-2">
+      <span class="font-bold truncate flex-1">${esc(i.name)}</span>
+      <button onclick="changeQty('${i.id}',-1)" class="w-6 h-6 bg-white border rounded">−</button>
+      <span>${i.qty}</span>
+      <button onclick="changeQty('${i.id}',1)" class="w-6 h-6 bg-white border rounded">+</button>
+      <span class="font-black">${fmt(i.price * i.qty)}</span>
+    </div>`).join("") : `<div class="text-center py-8 text-slate-400 text-xs">Сагс хоосон байна.</div>`;
+  const subtotal = cart.reduce((s, i) => s + Number(i.price || 0) * Number(i.qty || 0), 0);
+  const delivery = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
+  $("cartSubtotal").innerText = fmt(subtotal);
+  $("cartDelivery").innerText = delivery ? fmt(delivery) : (subtotal ? "Үнэгүй" : "0₮");
+  $("deliveryHint").innerText = subtotal >= 150000 ? "Хүргэлтийн төлбөр үнэгүй боллоо." : (subtotal > 0 ? `Үнэгүй хүргэлтэд ${fmt(150000 - subtotal)} дутуу байна.` : "150,000₮-с дээш захиалгад хүргэлт үнэгүй.");
+  $("cartTotal").innerText = fmt(subtotal + delivery);
+}
+function toggleCart() { const d = $("cartDrawer"); d.style.display = d.style.display === "none" ? "block" : "none"; }
+function openCheckoutModal() {
+  if (!cart.length) return alert("Сагс хоосон байна!");
+  toggleCart(); $("checkoutModal").style.display = "flex";
+}
+function closeCheckoutModal() { $("checkoutModal").style.display = "none"; }
+async function handleOrderSubmit(e) {
+  e.preventDefault();
+  try { ensureDb(); } catch (err) { dbErr(err); return; }
+  const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.qty || 0), 0);
+  const deliveryFee = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
+  const order = {
+    customer_name: $("ordName").value.trim(), phone: $("ordPhone").value.trim(), address: $("ordAddress").value.trim(),
+    items: cart.map(c => ({ id: c.id, name: c.name, price: Number(c.price), qty: Number(c.qty) })),
+    subtotal, delivery_fee: deliveryFee, total_price: subtotal + deliveryFee, paid: false, status: "Шинэ", created_at: new Date().toISOString()
+  };
+  $("ordBtn").disabled = true;
+  try {
+    const { error } = await db.from("orders").insert(order);
+    if (error) throw error;
+    showPayment({ ...order, name: order.customer_name, total: order.total_price });
+    closeCheckoutModal(); cart = []; lsSet("doctor_li_persistent_cart", cart); updateCartUI(); e.target.reset();
+  } catch (err) { dbErr(err); }
+  $("ordBtn").disabled = false;
+}
+
+// ---- Төлбөр ----
+let payInfo = { qr: "", banks: "" }, tempQr = "";
+function showPayment(o) {
+  $("payAmount").innerText = fmt(o.total); $("payRef").innerText = o.phone;
+  $("payQr").src = payInfo.qr || ""; $("payQr").style.display = payInfo.qr ? "block" : "none";
+  const rows = (payInfo.banks || "").split("\n").map(l => l.split("|").map(x => x.trim())).filter(a => a[1]);
+  $("payBanks").innerHTML = rows.map(([bank, acc, owner]) => `
+    <div class="flex items-center justify-between bg-slate-50 border rounded-xl p-3 gap-2">
+      <div><div class="font-bold">${esc(bank)}${owner ? " • " + esc(owner) : ""}</div><div class="text-base font-black tracking-wide">${esc(acc)}</div></div>
+      <button onclick="copyText('${esc(acc)}',this)" class="bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Хуулах</button>
+    </div>`).join("") || `<p class="text-center text-slate-400">Дансны мэдээлэл оруулаагүй байна.</p>`;
+  $("payModal").style.display = "flex";
+}
+function closePay() { $("payModal").style.display = "none"; }
+function copyText(t, btn) {
+  const done = () => { btn.innerText = "✓"; setTimeout(() => btn.innerText = "Хуулах", 1500); };
+  if (navigator.clipboard) navigator.clipboard.writeText(t).then(done).catch(() => prompt("Хуулах:", t)); else prompt("Хуулах:", t);
+}
+function handlePayQr(e) {
+  const f = e.target.files[0]; if (!f) return;
+  compressImage(f, 500, 0.9, d => { tempQr = d; $("payQrPreview").src = d; $("payQrPreview").style.display = "block"; });
+}
+async function savePaymentSettings() {
+  const data = { banks: $("payBanksInput").value.trim() };
+  if (tempQr) data.qr = tempQr;
+  try { const old = await getSetting("payment") || {}; await setSetting("payment", { ...old, ...data }); tempQr = ""; alert("Төлбөрийн мэдээлэл хадгалагдлаа!"); } catch (e) { dbErr(e); }
+}
+async function togglePaid(id, v) {
+  try { const { error } = await db.from("orders").update({ paid: v, status: v ? "Төлсөн" : "Шинэ" }).eq("id", id); if (error) throw error; await refreshOrders(); } catch (e) { dbErr(e); }
+}
+
+// ---- Эхлүүлэх ----
+document.addEventListener("DOMContentLoaded", async () => {
+  buildCategories();
+  cart = lsGet("doctor_li_persistent_cart", []);
+  updateCartUI();
+  try {
+    await refreshProducts();
+    const payment = await getSetting("payment");
+    payInfo = payment ? { qr: payment.qr || "", banks: payment.banks || "" } : payInfo;
+    $("payBanksInput").value = payInfo.banks;
+    if (payInfo.qr) { $("payQrPreview").src = payInfo.qr; $("payQrPreview").style.display = "block"; }
+    const banner = await getSetting("banner");
+    applyBanner(banner?.img || "");
+  } catch (e) {
+    console.error(e);
+    $("productGrid").innerHTML = `<div class="col-span-full py-16 text-center text-red-500 text-xs">Supabase-тай холбогдож чадсангүй. SQL тохиргоо болон холболтоо шалгана уу. ${esc(e.message || "")}</div>`;
+  }
+});
+</script>
+ </body>
+</html>
