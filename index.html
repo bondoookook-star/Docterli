@@ -308,13 +308,12 @@ header button,button{transition:transform .16s ease,background-color .16s ease,b
    </div>
   </div>
   <script>
-// ===== SUPABASE ТОХИРГОО =====
 const SUPABASE_URL = "https://iixydgieinyfdnhofjf.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpeHlkZ2lldWlueWZkbmhvZmpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg4NTYyOTcsImV4cCI6MjA1NDQzMjI5N30.K9vQ1B_example_key_fixed";
 const { createClient } = window.supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const dbErr = e => { console.error(e); alert("Supabase алдаа: " + (e?.message || e)); };
+const dbErr = e => { console.error(e); alert("Supabase aldaa: " + (e?.message || e)); };
 async function getSetting(key) {
   const { data } = await db.from("site_settings").select("value").eq("key", key).maybeSingle();
   return data ? data.value : null;
