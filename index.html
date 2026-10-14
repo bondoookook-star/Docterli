@@ -310,17 +310,29 @@ header button,button{transition:transform .16s ease,background-color .16s ease,b
   <script>
 const SUPABASE_URL = "https://iixydgieinyfdnhofjf.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpeHlkZ2lldWlueWZkbmhvZmpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg4NTYyOTcsImV4cCI6MjA1NDQzMjI5N30.K9vQ1B_example_key_fixed";
-const { createClient } = window.supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const dbErr = e => { console.error(e); alert("Supabase aldaa: " + (e?.message || e)); };
+let db = null;
+try {
+  if (window.supabase) {
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  }
+} catch(e) {
+  console.error("Supabase init error:", e);
+}
+
+const dbErr = e => { console.error(e); };
 async function getSetting(key) {
-  const { data } = await db.from("site_settings").select("value").eq("key", key).maybeSingle();
-  return data ? data.value : null;
+  if (!db) return null;
+  try {
+    const { data } = await db.from("site_settings").select("value").eq("key", key).maybeSingle();
+    return data ? data.value : null;
+  } catch(e) { return null; }
 }
 async function setSetting(key, value) {
-  await db.from("site_settings").upsert({ key, value }, { onConflict: "key" });
+  if (!db) return;
+  try { await db.from("site_settings").upsert({ key, value }, { onConflict: "key" }); } catch(e) {}
 }
+
 function normalizeProduct(row) {
   return { ...row, id: String(row.id), img: row.img || row.image_url || DEFAULT_IMG, desc: row.desc || row.description || "", createdAt: row.created_at || row.createdAt || null };
 }
@@ -329,18 +341,27 @@ function normalizeOrder(row) {
   const itemsText = Array.isArray(rawItems) ? rawItems.map(x => `${x.name || x.product_name || "Бараа"} (${x.qty || x.quantity || 1}ш)`).join(", ") : String(rawItems || "");
   return { ...row, id: String(row.id), name: row.customer_name || row.name || "", itemsText, subtotal: Number(row.subtotal ?? 0), deliveryFee: Number(row.delivery_fee ?? row.deliveryFee ?? 0), total: Number(row.total_price ?? row.total ?? 0), paid: !!row.paid };
 }
+
 async function refreshProducts() {
-  const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
-  if (error) throw error;
-  products = (data || []).map(normalizeProduct);
-  renderShopProducts();
-  if (document.getElementById("adminMainView").style.display !== "none") renderAdminList();
+  if (!db) return;
+  try {
+    const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
+    if (error) throw error;
+    products = (data || []).map(normalizeProduct);
+    renderShopProducts();
+    const adm = document.getElementById("adminMainView");
+    if (adm && adm.style.display !== "none") renderAdminList();
+  } catch (e) { console.error(e); }
 }
+
 async function refreshOrders() {
-  const { data, error } = await db.from("orders").select("*").order("created_at", { ascending: false });
-  if (error) throw error;
-  orders = (data || []).map(normalizeOrder);
-  renderAdminOrders();
+  if (!db) return;
+  try {
+    const { data, error } = await db.from("orders").select("*").order("created_at", { ascending: false });
+    if (error) throw error;
+    orders = (data || []).map(normalizeOrder);
+    renderAdminOrders();
+  } catch (e) { console.error(e); }
 }
 
 const CATS = [
@@ -365,39 +386,47 @@ const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JS
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 
 function buildCategories() {
-  $("menuAccordions").innerHTML = CATS.map(([id, title, icon, items]) => `
-    <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
-      <button type="button" onclick="toggleMenuAccordion('${id}')" class="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold hover:bg-slate-50">
-        <span class="flex items-center gap-2"><i class="${icon}"></i> ${title}</span>
-        <i id="${id}Icon" class="fa-solid fa-chevron-down text-[10px] text-slate-500 transition-transform"></i>
-      </button>
-      <div id="${id}" style="display:none" class="border-t bg-slate-50 px-2 py-1.5 space-y-1">
-        ${items.map(([k, n]) => `<button data-key="${k}" onclick="selectCategory('${k}','${n}')" class="cat-item w-full text-left px-3 py-1.5 rounded-lg text-xs font-bold text-slate-800 hover:bg-white">${n}</button>`).join("")}
-      </div>
-    </div>`).join("");
-  $("catCheckboxes").innerHTML = CATS.flatMap(c => c[3]).map(([k, n]) =>
-    `<label><input type="checkbox" name="catOption" value="${k}"> ${n}</label>`).join("");
+  const acc = $("menuAccordions");
+  if (acc) {
+    acc.innerHTML = CATS.map(([id, title, icon, items]) => `
+      <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
+        <button type="button" onclick="toggleMenuAccordion('${id}')" class="w-full flex items-center justify-between px-3.5 py-2.5 text-xs font-bold hover:bg-slate-50">
+          <span class="flex items-center gap-2"><i class="${icon}"></i> ${title}</span>
+          <i id="${id}Icon" class="fa-solid fa-chevron-down text-[10px] text-slate-500 transition-transform"></i>
+        </button>
+        <div id="${id}" style="display:none" class="border-t bg-slate-50 px-2 py-1.5 space-y-1">
+          ${items.map(([k, n]) => `<button data-key="${k}" onclick="selectCategory('${k}','${n}')" class="cat-item w-full text-left px-3 py-1.5 rounded-lg text-xs font-bold text-slate-800 hover:bg-white">${n}</button>`).join("")}
+        </div>
+      </div>`).join("");
+  }
+  const boxes = $("catCheckboxes");
+  if (boxes) {
+    boxes.innerHTML = CATS.flatMap(c => c[3]).map(([k, n]) =>
+      `<label><input type="checkbox" name="catOption" value="${k}"> ${n}</label>`).join("");
+  }
 }
 
-function openAboutModal() { $("aboutModal").style.display = "flex"; }
-function closeAboutModal() { $("aboutModal").style.display = "none"; }
-function openAdminPinModal() { $("adminPinModal").style.display = "flex"; $("adminPinInput").value = ""; $("adminPinInput").focus(); }
-function closeAdminPinModal() { $("adminPinModal").style.display = "none"; }
+function openAboutModal() { const m = $("aboutModal"); if(m) m.style.display = "flex"; }
+function closeAboutModal() { const m = $("aboutModal"); if(m) m.style.display = "none"; }
+function openAdminPinModal() { const m = $("adminPinModal"); if(m) { m.style.display = "flex"; $("adminPinInput").value = ""; $("adminPinInput").focus(); } }
+function closeAdminPinModal() { const m = $("adminPinModal"); if(m) m.style.display = "none"; }
 
 async function verifyAdminPin() {
-  const input = $("adminPinInput"), val = input.value.trim();
+  const input = $("adminPinInput");
+  if (!input) return;
+  const val = input.value.trim();
   if (!val) { alert("PIN кодоо оруулна уу."); input.focus(); return; }
   try {
     const savedPin = await getSetting("admin_pin");
     adminPin = savedPin ? String(savedPin) : "1054";
-  } catch (e) { dbErr(e); return; }
+  } catch (e) {}
   if (val !== adminPin) { alert("PIN код буруу байна!"); input.value = ""; input.focus(); return; }
   closeAdminPinModal();
   $("shopMainView").style.display = "none";
   $("adminMainView").style.display = "block";
   switchAdminSection("products");
   renderAdminList();
-  try { await refreshOrders(); } catch (e) { dbErr(e); }
+  try { await refreshOrders(); } catch (e) {}
 }
 
 function closeAdminView() {
@@ -420,7 +449,7 @@ async function changeAdminPin() {
   if (o !== adminPin) return alert("Одоогийн PIN код буруу!");
   if (n.length < 4) return alert("Шинэ PIN доод тал нь 4 оронтой байна!");
   if (n !== c) return alert("Шинэ PIN хоорондоо таарахгүй байна!");
-  try { await setSetting("admin_pin", n); } catch (e) { return dbErr(e); }
+  try { await setSetting("admin_pin", n); } catch (e) {}
   adminPin = n;
   alert("PIN амжилттай солигдлоо!");
   ["oldPinInput", "newPinInput", "confirmPinInput"].forEach(i => $(i).value = "");
@@ -453,27 +482,29 @@ function handleImageUpload(e) {
 }
 async function savePinnedBanner() {
   if (!tempBannerData) return alert("Эхлээд зургаа сонгоно уу!");
-  try { await setSetting("banner", { img: tempBannerData }); } catch (e) { return dbErr(e); }
+  try { await setSetting("banner", { img: tempBannerData }); } catch (e) {}
   tempBannerData = ""; $("bannerPreviewContainer").style.display = "none";
   alert("Баннер амжилттай солигдлоо!"); closeAdminView();
 }
 async function removePinnedBanner() {
-  try { await db.from("site_settings").delete().eq("key", "banner"); } catch (e) { return dbErr(e); }
+  if(db) { try { await db.from("site_settings").delete().eq("key", "banner"); } catch (e) {} }
   alert("Баннер арилгагдлаа."); closeAdminView();
 }
 function applyBanner(img) {
-  $("pinnedBannerImg").src = img || "";
-  $("pinnedBannerImg").style.display = img ? "block" : "none";
-  $("defaultBannerContent").style.display = img ? "none" : "block";
+  const p = $("pinnedBannerImg"), def = $("defaultBannerContent");
+  if (p) { p.src = img || ""; p.style.display = img ? "block" : "none"; }
+  if (def) { def.style.display = img ? "none" : "block"; }
 }
 
 function renderShopProducts() {
+  const grid = $("productGrid");
+  if (!grid) return;
   const q = ($("searchInput").value || "").trim().toLowerCase();
   const list = products.filter(p => {
     const cats = (p.category || "").toLowerCase().split(",").map(c => c.trim());
     return (currentCategory === "all" || cats.includes(currentCategory)) && (!q || (p.name || "").toLowerCase().includes(q));
   });
-  $("productGrid").innerHTML = list.length ? list.map(p => `
+  grid.innerHTML = list.length ? list.map(p => `
     <article class="product-card bg-white border border-slate-200 overflow-hidden flex flex-col justify-between">
       <button type="button" class="product-image relative aspect-square rounded-xl overflow-hidden mb-3 w-full" onclick="openProductDetail('${p.id}')">
         <img src="${esc(p.img || DEFAULT_IMG)}" alt="${esc(p.name)}" loading="lazy" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='${DEFAULT_IMG}'">
@@ -502,9 +533,11 @@ function closeProductDetail() { $("productDetailModal").style.display = "none"; 
 
 function selectCategory(key, title) {
   currentCategory = key.toLowerCase();
-  $("currentCategoryTitle").innerText = title;
+  const titleEl = $("currentCategoryTitle");
+  if (titleEl) titleEl.innerText = title;
   document.querySelectorAll(".cat-item").forEach(i => i.classList.toggle("active", i.dataset.key === key));
-  toggleSideMenu(); renderShopProducts();
+  toggleSideMenu(); 
+  renderShopProducts();
 }
 
 function toggleSideMenu() {
@@ -515,13 +548,18 @@ function toggleSideMenu() {
 }
 
 function toggleMenuAccordion(id) {
-  const el = $(id), hidden = el.style.display === "none";
+  const el = $(id);
+  if (!el) return;
+  const hidden = el.style.display === "none";
   el.style.display = hidden ? "block" : "none";
-  $(id + "Icon").style.transform = hidden ? "rotate(180deg)" : "";
+  const icon = $(id + "Icon");
+  if (icon) icon.style.transform = hidden ? "rotate(180deg)" : "";
 }
 
 function renderAdminList() {
-  $("adminProductList").innerHTML = products.map(p => `
+  const list = $("adminProductList");
+  if (!list) return;
+  list.innerHTML = products.map(p => `
     <div class="flex items-center justify-between p-2.5 bg-white rounded-xl border text-xs gap-2">
       <img src="${esc(p.img)}" class="w-10 h-10 object-cover rounded-lg border">
       <div class="flex-1 truncate font-bold">${esc(p.name)}</div>
@@ -549,16 +587,17 @@ function editProduct(id) {
 
 function resetProductForm() {
   editId = null; uploadedImageData = "";
-  ["prodNameInput", "prodPriceInput", "prodDescInput"].forEach(i => $(i).value = "");
-  $("prodBadgeInput").value = "Шинэ";
+  ["prodNameInput", "prodPriceInput", "prodDescInput"].forEach(i => { const el = $(i); if(el) el.value = ""; });
+  const badge = $("prodBadgeInput"); if(badge) badge.value = "Шинэ";
   document.querySelectorAll("input[name='catOption']").forEach(c => c.checked = false);
-  $("imagePreviewContainer").style.display = "none";
-  $("formModeTitle").innerText = "Шинэ бараа бүртгэх";
-  $("saveBtn").innerText = "Барааг хадгалах";
-  $("cancelEditBtn").style.display = "none";
+  const prev = $("imagePreviewContainer"); if(prev) prev.style.display = "none";
+  const modeTitle = $("formModeTitle"); if(modeTitle) modeTitle.innerText = "Шинэ бараа бүртгэх";
+  const saveBtn = $("saveBtn"); if(saveBtn) saveBtn.innerText = "Барааг хадгалах";
+  const cancelBtn = $("cancelEditBtn"); if(cancelBtn) cancelBtn.style.display = "none";
 }
 
 async function saveProductData() {
+  if (!db) return alert("Өгөгдлийн сан холбогдоогүй байна!");
   const name = $("prodNameInput").value.trim(), price = Number($("prodPriceInput").value);
   if (!name || !price) return alert("Нэр болон үнийг оруулна уу!");
   const cats = Array.from(document.querySelectorAll("input[name='catOption']:checked")).map(c => c.value).join(",");
@@ -577,20 +616,22 @@ async function saveProductData() {
     }
     await refreshProducts();
     resetProductForm();
-  } catch (e) { dbErr(e); }
+  } catch (e) { alert("Алдаа гарлаа: " + e.message); }
 }
 
 async function deleteProduct(id) {
-  if (!confirm("Устгах уу?")) return;
+  if (!db || !confirm("Устгах уу?")) return;
   try {
     const { error } = await db.from("products").delete().eq("id", id);
     if (error) throw error;
     await refreshProducts();
-  } catch (e) { dbErr(e); }
+  } catch (e) { alert("Алдаа гарлаа: " + e.message); }
 }
 
 function renderAdminOrders() {
-  $("adminOrdersList").innerHTML = orders.length ? orders.map(o => `
+  const list = $("adminOrdersList");
+  if (!list) return;
+  list.innerHTML = orders.length ? orders.map(o => `
     <div class="bg-white p-3 rounded-xl border text-xs space-y-1">
       <div class="font-bold flex justify-between"><span>👤 ${esc(o.name)}</span><a href="tel:${esc(o.phone)}" class="text-blue-600">📞 ${esc(o.phone)}</a></div>
       <div class="text-slate-500">📍 ${esc(o.address)}</div>
@@ -600,8 +641,8 @@ function renderAdminOrders() {
 }
 
 async function deleteOrder(id) {
-  if (!confirm("Устгах уу?")) return;
-  try { await db.from("orders").delete().eq("id", id); await refreshOrders(); } catch (e) { dbErr(e); }
+  if (!db || !confirm("Устгах уу?")) return;
+  try { await db.from("orders").delete().eq("id", id); await refreshOrders(); } catch (e) {}
 }
 
 function addToCart(id) {
@@ -618,29 +659,33 @@ function changeQty(id, d) {
 }
 
 function updateCartUI() {
-  $("cartCount").innerText = cart.reduce((s, i) => s + i.qty, 0);
-  $("cartItemsList").innerHTML = cart.length ? cart.map(i => `
-    <div class="flex justify-between items-center text-xs p-2 bg-slate-50 rounded-xl gap-2">
-      <span class="font-bold truncate flex-1">${esc(i.name)}</span>
-      <button onclick="changeQty('${i.id}',-1)" class="w-6 h-6 bg-white border rounded">−</button>
-      <span>${i.qty}</span>
-      <button onclick="changeQty('${i.id}',1)" class="w-6 h-6 bg-white border rounded">+</button>
-      <span class="font-black">${fmt(i.price * i.qty)}</span>
-    </div>`).join("") : `<div class="text-center py-8 text-slate-400 text-xs">Сагс хоосон байна.</div>`;
+  const count = $("cartCount"); if(count) count.innerText = cart.reduce((s, i) => s + i.qty, 0);
+  const itemsList = $("cartItemsList");
+  if (itemsList) {
+    itemsList.innerHTML = cart.length ? cart.map(i => `
+      <div class="flex justify-between items-center text-xs p-2 bg-slate-50 rounded-xl gap-2">
+        <span class="font-bold truncate flex-1">${esc(i.name)}</span>
+        <button onclick="changeQty('${i.id}',-1)" class="w-6 h-6 bg-white border rounded">−</button>
+        <span>${i.qty}</span>
+        <button onclick="changeQty('${i.id}',1)" class="w-6 h-6 bg-white border rounded">+</button>
+        <span class="font-black">${fmt(i.price * i.qty)}</span>
+      </div>`).join("") : `<div class="text-center py-8 text-slate-400 text-xs">Сагс хоосон байна.</div>`;
+  }
   const subtotal = cart.reduce((s, i) => s + Number(i.price || 0) * Number(i.qty || 0), 0);
   const delivery = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
-  $("cartSubtotal").innerText = fmt(subtotal);
-  $("cartDelivery").innerText = delivery ? fmt(delivery) : (subtotal ? "Үнэгүй" : "0₮");
-  $("deliveryHint").innerText = subtotal >= 150000 ? "Хүргэлт үнэгүй." : "150,000₮-с дээш үнэгүй.";
-  $("cartTotal").innerText = fmt(subtotal + delivery);
+  if($("cartSubtotal")) $("cartSubtotal").innerText = fmt(subtotal);
+  if($("cartDelivery")) $("cartDelivery").innerText = delivery ? fmt(delivery) : (subtotal ? "Үнэгүй" : "0₮");
+  if($("deliveryHint")) $("deliveryHint").innerText = subtotal >= 150000 ? "Хүргэлт үнэгүй." : "150,000₮-с дээш үнэгүй.";
+  if($("cartTotal")) $("cartTotal").innerText = fmt(subtotal + delivery);
 }
 
-function toggleCart() { const d = $("cartDrawer"); d.style.display = d.style.display === "none" ? "block" : "none"; }
-function openCheckoutModal() { if (!cart.length) return alert("Сагс хоосон!"); toggleCart(); $("checkoutModal").style.display = "flex"; }
-function closeCheckoutModal() { $("checkoutModal").style.display = "none"; }
+function toggleCart() { const d = $("cartDrawer"); if(d) d.style.display = d.style.display === "none" ? "block" : "none"; }
+function openCheckoutModal() { if (!cart.length) return alert("Сагс хоосон!"); toggleCart(); const m = $("checkoutModal"); if(m) m.style.display = "flex"; }
+function closeCheckoutModal() { const m = $("checkoutModal"); if(m) m.style.display = "none"; }
 
 async function handleOrderSubmit(e) {
   e.preventDefault();
+  if (!db) return alert("Өгөгдлийн сан холбогдоогүй байна!");
   const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.qty || 0), 0);
   const deliveryFee = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
   const order = {
@@ -653,7 +698,7 @@ async function handleOrderSubmit(e) {
     if (error) throw error;
     showPayment({ ...order, name: order.customer_name, total: order.total_price });
     closeCheckoutModal(); cart = []; lsSet("doctor_li_persistent_cart", cart); updateCartUI(); e.target.reset();
-  } catch (err) { dbErr(err); }
+  } catch (err) { alert("Захиалга илгээхэд алдаа гарлаа: " + err.message); }
 }
 
 let payInfo = { qr: "", banks: "" }, tempQr = "";
@@ -679,11 +724,48 @@ function handlePayQr(e) {
 async function savePaymentSettings() {
   const data = { banks: $("payBanksInput").value.trim() };
   if (tempQr) data.qr = tempQr;
-  try { const old = await getSetting("payment") || {}; await setSetting("payment", { ...old, ...data }); tempQr = ""; alert("Хадгалагдлаа!"); } catch (e) { dbErr(e); }
+  try { const old = await getSetting("payment") || {}; await setSetting("payment", { ...old, ...data }); tempQr = ""; alert("Хадгалагдлаа!"); } catch (e) {}
 }
 async function togglePaid(id, v) {
-  try { await db.from("orders").update({ paid: v, status: v ? "Төлсөн" : "Шинэ" }).eq("id", id); await refreshOrders(); } catch (e) { dbErr(e); }
+  if (!db) return;
+  try { await db.from("orders").update({ paid: v, status: v ? "Төлсөн" : "Шинэ" }).eq("id", id); await refreshOrders(); } catch (e) {}
 }
+
+// Global functions explicit attachment to prevent any scope issues
+window.toggleSideMenu = toggleSideMenu;
+window.selectCategory = selectCategory;
+window.toggleMenuAccordion = toggleMenuAccordion;
+window.openAdminPinModal = openAdminPinModal;
+window.closeAdminPinModal = closeAdminPinModal;
+window.verifyAdminPin = verifyAdminPin;
+window.closeAdminView = closeAdminView;
+window.switchAdminSection = switchAdminSection;
+window.changeAdminPin = changeAdminPin;
+window.openAboutModal = openAboutModal;
+window.closeAboutModal = closeAboutModal;
+window.toggleCart = toggleCart;
+window.openCheckoutModal = openCheckoutModal;
+window.closeCheckoutModal = closeCheckoutModal;
+window.closeProductDetail = closeProductDetail;
+window.openProductDetail = openProductDetail;
+window.addToCart = addToCart;
+window.changeQty = changeQty;
+window.handleOrderSubmit = handleOrderSubmit;
+window.closePay = closePay;
+window.copyText = copyText;
+window.handleBannerUpload = handleBannerUpload;
+window.handleImageUpload = handleImageUpload;
+window.savePinnedBanner = savePinnedBanner;
+window.removePinnedBanner = removePinnedBanner;
+window.handlePayQr = handlePayQr;
+window.savePaymentSettings = savePaymentSettings;
+window.saveProductData = saveProductData;
+window.resetProductForm = resetProductForm;
+window.editProduct = editProduct;
+window.deleteProduct = deleteProduct;
+window.deleteOrder = deleteOrder;
+window.togglePaid = togglePaid;
+window.renderShopProducts = renderShopProducts;
 
 document.addEventListener("DOMContentLoaded", async () => {
   buildCategories();
@@ -693,8 +775,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     await refreshProducts();
     const payment = await getSetting("payment");
     payInfo = payment ? { qr: payment.qr || "", banks: payment.banks || "" } : payInfo;
-    $("payBanksInput").value = payInfo.banks;
-    if (payInfo.qr) { $("payQrPreview").src = payInfo.qr; $("payQrPreview").style.display = "block"; }
+    if ($("payBanksInput")) $("payBanksInput").value = payInfo.banks;
+    if (payInfo.qr && $("payQrPreview")) { $("payQrPreview").src = payInfo.qr; $("payQrPreview").style.display = "block"; }
     const banner = await getSetting("banner");
     applyBanner(banner?.img || "");
   } catch (e) {
