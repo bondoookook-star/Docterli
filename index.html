@@ -325,28 +325,16 @@ const { createClient } = window.supabase;
 const supabaseKeyConfigured = SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes("PASTE_YOUR_");
 const db = supabaseKeyConfigured ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 const ensureDb = () => {
-  if (!db) throw new Error("Supabase-ийн Publishable key оруулаагүй байна. HTML доторх SUPABASE_ANON_KEY утгыг Supabase Dashboard > Connect хэсгийн key-ээр солино уу.");
+  if (!db) throw new Error("Supabase-ийн Publishable key оруулаагүй байна.");
 };
 const dbErr = e => { console.error(e); alert("Supabase өгөгдлийн сангийн алдаа: " + (e?.message || e)); };
-async function getSetting(key) {
-  ensureDb();
-  const { data, error } = await db.from("settings").select("value").eq("key", key).maybeSingle();
-  if (error) throw error;
-  return data ? data.value : null;
-}
-async function setSetting(key, value) {
-  ensureDb();
-  const { error } = await db.from("settings").upsert({ key, value }, { onConflict: "key" });
-  if (error) throw error;
-}
-function normalizeProduct(row) {
-  return { ...row, id: String(row.id), name: row.title || row.name || "", img: row.image || row.img || row.image_url || DEFAULT_IMG, desc: row.description || row.desc || "", createdAt: row.created_at || row.createdAt || null };
-}
+
 function normalizeOrder(row) {
   const rawItems = row.items;
   const itemsText = Array.isArray(rawItems) ? rawItems.map(x => `${x.name || x.product_name || "Бараа"} (${x.qty || x.quantity || 1}ш)`).join(", ") : String(rawItems || "");
   return { ...row, id: String(row.id), name: row.customer_name || row.name || "", itemsText, subtotal: Number(row.subtotal ?? 0), deliveryFee: Number(row.delivery_fee ?? row.deliveryFee ?? 0), total: Number(row.total_price ?? row.total ?? 0), paid: !!row.paid };
 }
+
 async function refreshProducts() {
   ensureDb();
   const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
@@ -729,7 +717,74 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error(e);
     $("productGrid").innerHTML = `<div class="col-span-full py-16 text-center text-red-500 text-xs">Supabase-тай холбогдож чадсангүй. SQL тохиргоо болон холболтоо шалгана уу. ${esc(e.message || "")}</div>`;
   }
-});
-</script>
+  });
+   async function handleOrderSubmit(e) {
+  e.preventDefault();
+  try { ensureDb(); } catch (err) { dbErr(err); return; }
+  const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.qty || 0), 0);
+  const deliveryFee = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
+  const totalAmount = subtotal + deliveryFee;
+  const externalRef = "ORD-" + Date.now().toString().slice(-6);
+
+  const order = {
+    name: $("ordName").value.trim(), phone: $("ordPhone").value.trim(), address: $("ordAddress").value.trim(),
+    items: cart.map(c => ({ id: c.id, name: c.name, price: Number(c.price), qty: Number(c.qty) })),
+    subtotal, delivery_fee: deliveryFee, total: totalAmount, paid: false, status: "Шинэ"
+  };
+  $("ordBtn").disabled = true;
+  try {
+    const { error } = await db.from("orders").insert(order);
+    if (error) throw error;
+
+    const finoRes = await fetch('https://qr-api.finovation.mn/api/v1/merchant-api/dynamic-qr/invoices', {
+      method: 'POST',
+      headers: {
+        'X-API-Key': 'fino_live_rowO75uoqDcwqs-AJV0T1UAkGSd5GCo8nOzVM3jGKUk',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        amount: totalAmount.toFixed(2),
+        terminal_no: 'DYN-VBG1-6603',
+        description: `Захиалга #${externalRef}`,
+        external_ref: externalRef,
+        currency: 'MNT',
+        ttl_seconds: 900
+      })
+    });
+    const finoResult = await finoRes.json();
+
+    if (finoResult.success && finoResult.data) {
+      const qrImage = finoResult.data.payment_options.qr_image;
+      const deepLinks = finoResult.data.payment_options.deep_links || [];
+      showFinoPayment(totalAmount, externalRef, qrImage, deepLinks);
+    } else {
+      showPayment({ ...order, total: totalAmount });
+    }
+
+    closeCheckoutModal(); cart = []; lsSet("doctor_li_persistent_cart", cart); updateCartUI(); e.target.reset();
+  } catch (err) { dbErr(err); }
+  $("ordBtn").disabled = false;
+}
+
+function showFinoPayment(amount, ref, qrImage, deepLinks) {
+  $("payAmount").innerText = fmt(amount); 
+  $("payRef").innerText = ref;
+  $("payQr").src = qrImage || ""; 
+  $("payQr").style.display = qrImage ? "block" : "none";
+  
+  const linksHtml = deepLinks.map(bank => `
+    <a href="${bank.url}" class="flex items-center justify-between bg-slate-900 text-white font-bold p-3 rounded-xl gap-2 hover:bg-slate-800 transition-all">
+      <span class="flex items-center gap-2">
+        ${bank.logo ? `<img src="${bank.logo}" class="w-6 h-6 object-contain rounded bg-white p-0.5">` : ''}
+        ${bank.name || bank.description} руу шилжих
+      </span>
+      <span class="bg-emerald-500 text-white text-[10px] px-2 py-1 rounded">Апп нээх →</span>
+    </a>
+  `).join("");
+
+  $("payBanks").innerHTML = linksHtml || `<p class="text-center text-slate-400">Банкны апп холбогдоогүй байна.</p>`;
+  $("payModal").style.display = "flex";
+}
+
  </body>
 </html>
