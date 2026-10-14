@@ -329,12 +329,25 @@ const ensureDb = () => {
 };
 const dbErr = e => { console.error(e); alert("Supabase өгөгдлийн сангийн алдаа: " + (e?.message || e)); };
 
+async function getSetting(key) {
+  ensureDb();
+  const { data, error } = await db.from("settings").select("value").eq("key", key).maybeSingle();
+  if (error) throw error;
+  return data ? data.value : null;
+}
+async function setSetting(key, value) {
+  ensureDb();
+  const { error } = await db.from("settings").upsert({ key, value }, { onConflict: "key" });
+  if (error) throw error;
+}
+function normalizeProduct(row) {
+  return { ...row, id: String(row.id), name: row.title || row.name || "", img: row.image || row.img || row.image_url || DEFAULT_IMG, desc: row.description || row.desc || "", createdAt: row.created_at || row.createdAt || null };
+}
 function normalizeOrder(row) {
   const rawItems = row.items;
   const itemsText = Array.isArray(rawItems) ? rawItems.map(x => `${x.name || x.product_name || "Бараа"} (${x.qty || x.quantity || 1}ш)`).join(", ") : String(rawItems || "");
   return { ...row, id: String(row.id), name: row.customer_name || row.name || "", itemsText, subtotal: Number(row.subtotal ?? 0), deliveryFee: Number(row.delivery_fee ?? row.deliveryFee ?? 0), total: Number(row.total_price ?? row.total ?? 0), paid: !!row.paid };
 }
-
 async function refreshProducts() {
   ensureDb();
   const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
@@ -649,76 +662,8 @@ function openCheckoutModal() {
   toggleCart(); $("checkoutModal").style.display = "flex";
 }
 function closeCheckoutModal() { $("checkoutModal").style.display = "none"; }
+
 async function handleOrderSubmit(e) {
-  e.preventDefault();
-  try { ensureDb(); } catch (err) { dbErr(err); return; }
-  const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.qty || 0), 0);
-  const deliveryFee = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
-  const order = {
-    name: $("ordName").value.trim(), phone: $("ordPhone").value.trim(), address: $("ordAddress").value.trim(),
-    items: cart.map(c => ({ id: c.id, name: c.name, price: Number(c.price), qty: Number(c.qty) })),
-    subtotal, delivery_fee: deliveryFee, total: subtotal + deliveryFee, paid: false, status: "Шинэ"
-  };
-  $("ordBtn").disabled = true;
-  try {
-    const { error } = await db.from("orders").insert(order);
-    if (error) throw error;
-    showPayment({ ...order, name: order.name, total: order.total });
-    closeCheckoutModal(); cart = []; lsSet("doctor_li_persistent_cart", cart); updateCartUI(); e.target.reset();
-  } catch (err) { dbErr(err); }
-  $("ordBtn").disabled = false;
-}
-
-// ---- Төлбөр ----
-let payInfo = { qr: "", banks: "" }, tempQr = "";
-function showPayment(o) {
-  $("payAmount").innerText = fmt(o.total); $("payRef").innerText = o.phone;
-  $("payQr").src = payInfo.qr || ""; $("payQr").style.display = payInfo.qr ? "block" : "none";
-  const rows = (payInfo.banks || "").split("\n").map(l => l.split("|").map(x => x.trim())).filter(a => a[1]);
-  $("payBanks").innerHTML = rows.map(([bank, acc, owner]) => `
-    <div class="flex items-center justify-between bg-slate-50 border rounded-xl p-3 gap-2">
-      <div><div class="font-bold">${esc(bank)}${owner ? " • " + esc(owner) : ""}</div><div class="text-base font-black tracking-wide">${esc(acc)}</div></div>
-      <button onclick="copyText('${esc(acc)}',this)" class="bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Хуулах</button>
-    </div>`).join("") || `<p class="text-center text-slate-400">Дансны мэдээлэл оруулаагүй байна.</p>`;
-  $("payModal").style.display = "flex";
-}
-function closePay() { $("payModal").style.display = "none"; }
-function copyText(t, btn) {
-  const done = () => { btn.innerText = "✓"; setTimeout(() => btn.innerText = "Хуулах", 1500); };
-  if (navigator.clipboard) navigator.clipboard.writeText(t).then(done).catch(() => prompt("Хуулах:", t)); else prompt("Хуулах:", t);
-}
-function handlePayQr(e) {
-  const f = e.target.files[0]; if (!f) return;
-  compressImage(f, 500, 0.9, d => { tempQr = d; $("payQrPreview").src = d; $("payQrPreview").style.display = "block"; });
-}
-async function savePaymentSettings() {
-  const data = { banks: $("payBanksInput").value.trim() };
-  if (tempQr) data.qr = tempQr;
-  try { const old = await getSetting("payment") || {}; await setSetting("payment_info", { ...old, ...data }); tempQr = ""; alert("Төлбөрийн мэдээлэл хадгалагдлаа!"); } catch (e) { dbErr(e); }
-}
-async function togglePaid(id, v) {
-  try { const { error } = await db.from("orders").update({ paid: v, status: v ? "Төлсөн" : "Шинэ" }).eq("id", id); if (error) throw error; await refreshOrders(); } catch (e) { dbErr(e); }
-}
-
-// ---- Эхлүүлэх ----
-document.addEventListener("DOMContentLoaded", async () => {
-  buildCategories();
-  cart = lsGet("doctor_li_persistent_cart", []);
-  updateCartUI();
-  try {
-    await refreshProducts();
-    const payment = await getSetting("payment_info");
-    payInfo = payment ? { qr: payment.qr || "", banks: payment.banks || "" } : payInfo;
-    $("payBanksInput").value = payInfo.banks;
-    if (payInfo.qr) { $("payQrPreview").src = payInfo.qr; $("payQrPreview").style.display = "block"; }
-    const banner = await getSetting("banner_img");
-    applyBanner(typeof banner === "string" ? banner : (banner?.img || ""));
-  } catch (e) {
-    console.error(e);
-    $("productGrid").innerHTML = `<div class="col-span-full py-16 text-center text-red-500 text-xs">Supabase-тай холбогдож чадсангүй. SQL тохиргоо болон холболтоо шалгана уу. ${esc(e.message || "")}</div>`;
-  }
-  });
-   async function handleOrderSubmit(e) {
   e.preventDefault();
   try { ensureDb(); } catch (err) { dbErr(err); return; }
   const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.qty || 0), 0);
@@ -786,5 +731,55 @@ function showFinoPayment(amount, ref, qrImage, deepLinks) {
   $("payModal").style.display = "flex";
 }
 
+// ---- Төлбөр ----
+let payInfo = { qr: "", banks: "" }, tempQr = "";
+function showPayment(o) {
+  $("payAmount").innerText = fmt(o.total); $("payRef").innerText = o.phone;
+  $("payQr").src = payInfo.qr \vert{}\vert{} ""; $("payQr").style.display = payInfo.qr ? "block" : "none";
+  const rows = (payInfo.banks || "").split("\n").map(l => l.split("|").map(x => x.trim())).filter(a => a[1]);
+  $("payBanks").innerHTML = rows.map(([bank, acc, owner]) => `
+    <div class="flex items-center justify-between bg-slate-50 border rounded-xl p-3 gap-2">
+      <div><div class="font-bold">${esc(bank)}${owner ? " • " + esc(owner) : ""}</div><div class="text-base font-black tracking-wide">${esc(acc)}</div></div>
+      <button onclick="copyText('${esc(acc)}',this)" class="bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Хуулах</button>
+    </div>`).join("") || `<p class="text-center text-slate-400">Дансны мэдээлэл оруулаагүй байна.</p>`;
+  $("payModal").style.display = "flex";
+}
+function closePay() { $("payModal").style.display = "none"; }
+function copyText(t, btn) {
+  const done = () => { btn.innerText = "✓"; setTimeout(() => btn.innerText = "Хуулах", 1500); };
+  if (navigator.clipboard) navigator.clipboard.writeText(t).then(done).catch(() => prompt("Хуулах:", t)); else prompt("Хуулах:", t);
+}
+function handlePayQr(e) {
+  const f = e.target.files[0]; if (!f) return;
+  compressImage(f, 500, 0.9, d => { tempQr = d; $("payQrPreview").src = d; $("payQrPreview").style.display = "block"; });
+}
+async function savePaymentSettings() {
+  const data = { banks: $("payBanksInput").value.trim() };
+  if (tempQr) data.qr = tempQr;
+  try { const old = await getSetting("payment") || {}; await setSetting("payment_info", { ...old, ...data }); tempQr = ""; alert("Төлбөрийн мэдээлэл хадгалагдлаа!"); } catch (e) { dbErr(e); }
+}
+async function togglePaid(id, v) {
+  try { const { error } = await db.from("orders").update({ paid: v, status: v ? "Төлсөн" : "Шинэ" }).eq("id", id); if (error) throw error; await refreshOrders(); } catch (e) { dbErr(e); }
+}
+
+// ---- Эхлүүлэх ----
+document.addEventListener("DOMContentLoaded", async () => {
+  buildCategories();
+  cart = lsGet("doctor_li_persistent_cart", []);
+  updateCartUI();
+  try {
+    await refreshProducts();
+    const payment = await getSetting("payment_info");
+    payInfo = payment ? { qr: payment.qr || "", banks: payment.banks || "" } : payInfo;
+    $("payBanksInput").value = payInfo.banks;
+    if (payInfo.qr) { $("payQrPreview").src = payInfo.qr; $("payQrPreview").style.display = "block"; }
+    const banner = await getSetting("banner_img");
+    applyBanner(typeof banner === "string" ? banner : (banner?.img || ""));
+  } catch (e) {
+    console.error(e);
+    $("productGrid").innerHTML = `<div class="col-span-full py-16 text-center text-red-500 text-xs">Supabase-тай холбогдож чадсангүй. SQL тохиргоо болон холболтоо шалгана уу. ${esc(e.message || "")}</div>`;
+  }
+});
+</script>
  </body>
-  </html>
+</html>
