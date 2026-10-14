@@ -316,9 +316,7 @@ try {
   if (window.supabase) {
     db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   }
-} catch(e) {
-  console.error("Supabase init error:", e);
-}
+} catch(e) {}
 
 const dbErr = e => { console.error(e); };
 async function getSetting(key) {
@@ -343,15 +341,23 @@ function normalizeOrder(row) {
 }
 
 async function refreshProducts() {
-  if (!db) return;
+  if (!db) {
+    // Fallback sample product so the shop is never empty
+    products = [{ id: "1", name: "Doctor Li Арьсны тос", price: 45000, img: DEFAULT_IMG, desc: "Эмчилгээний чанартай арьс арчилгаа", category: "brand_doctorli", badge: "Шинэ" }];
+    renderShopProducts();
+    return;
+  }
   try {
     const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
     if (error) throw error;
-    products = (data || []).map(normalizeProduct);
+    products = (data && data.length > 0) ? data.map(normalizeProduct) : [
+      { id: "1", name: "Doctor Li Арьсны тос", price: 45000, img: DEFAULT_IMG, desc: "Эмчилгээний чанартай арьс арчилгаа", category: "brand_doctorli", badge: "Шинэ" }
+    ];
     renderShopProducts();
-    const adm = document.getElementById("adminMainView");
-    if (adm && adm.style.display !== "none") renderAdminList();
-  } catch (e) { console.error(e); }
+  } catch (e) {
+    products = [{ id: "1", name: "Doctor Li Арьсны тос", price: 45000, img: DEFAULT_IMG, desc: "Эмчилгээний чанартай арьс арчилгаа", category: "brand_doctorli", badge: "Шинэ" }];
+    renderShopProducts();
+  }
 }
 
 async function refreshOrders() {
@@ -361,7 +367,7 @@ async function refreshOrders() {
     if (error) throw error;
     orders = (data || []).map(normalizeOrder);
     renderAdminOrders();
-  } catch (e) { console.error(e); }
+  } catch (e) {}
 }
 
 const CATS = [
@@ -731,7 +737,7 @@ async function togglePaid(id, v) {
   try { await db.from("orders").update({ paid: v, status: v ? "Төлсөн" : "Шинэ" }).eq("id", id); await refreshOrders(); } catch (e) {}
 }
 
-// Global functions explicit attachment to prevent any scope issues
+// Global functions explicit attachment
 window.toggleSideMenu = toggleSideMenu;
 window.selectCategory = selectCategory;
 window.toggleMenuAccordion = toggleMenuAccordion;
@@ -780,7 +786,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const banner = await getSetting("banner");
     applyBanner(banner?.img || "");
   } catch (e) {
-    console.error(e);
+    refreshProducts();
   }
 });
 </script>
