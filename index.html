@@ -34,11 +34,9 @@ i[class*="fa-"]::before{content:"";display:block;width:100%;height:100%;backgrou
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#f8fafc;-webkit-tap-highlight-color:transparent}
 .cat-item.active{background:#0f172a!important;color:#fff!important;font-weight:700}
 body{font-family:Inter,-apple-system,"Segoe UI",Roboto,sans-serif;color:#172033}
-/* Contrast, touch targets, and mobile layout improvements */
 #sideMenuDrawer .cat-item{color:#273449!important;background:#fff;border:1px solid #e2e8f0;min-height:44px;font-size:13px}
 #sideMenuDrawer .cat-item.active{background:#0f172a!important;color:#fff!important;border-color:#0f172a}
 #sideMenuDrawer button{color:#273449}
-#sideMenuDrawer .cat-item.active{color:#fff!important}
 #adminPinModal input{min-height:48px;color:#111827}
 #adminPinModal button{min-height:46px;font-size:13px}
 button,input,textarea{touch-action:manipulation}
@@ -48,14 +46,12 @@ img{max-width:100%}
 svg text[font-size="44"]{stroke:#0f172a;stroke-width:1.4px;paint-order:stroke}
 .admTab{min-width:30%}
 @media(min-width:768px){#defaultBannerContent{padding:3rem}#defaultBannerContent h2{font-size:2rem}#defaultBannerContent p{font-size:1rem}#pinnedBannerImg{max-height:380px}}
-/* Responsive storefront refinements */
 :root{color-scheme:light;--ink:#172033;--accent:#243b32;--line:#e8e9e5;--soft:#f7f8f5}
 html{scroll-behavior:smooth}body{background:#f4f5f2;color:var(--ink)}
 .wrap{max-width:1320px;box-shadow:0 12px 55px rgba(25,35,29,.08)}
 header{min-height:76px;gap:10px!important;padding-top:10px!important;padding-bottom:10px!important}
 header svg{width:clamp(210px,31vw,340px);height:auto;max-height:64px}
 header button,button{transition:transform .16s ease,background-color .16s ease,box-shadow .16s ease}
-button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid rgba(100,130,110,.35);outline-offset:2px}
 #defaultBannerContent{background:linear-gradient(115deg,#17251f 0%,#2d473b 58%,#617363 100%)!important;padding:clamp(20px,4vw,44px)!important}
 #defaultBannerContent h2{letter-spacing:-.035em}
 #pinnedBannerImg{width:100%;max-height:420px;object-fit:cover}
@@ -85,8 +81,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
   .product-name{font-size:12px!important}
   .product-desc{font-size:10px!important}
   #shopMainView>div:nth-of-type(2){padding:12px!important}
-  #defaultBannerContent .pt-2{flex-wrap:wrap;gap:8px}
-  #defaultBannerContent .pt-2 span{font-size:10px}
 }
 @media(min-width:768px){#shopMainView>div:nth-of-type(2){padding:24px 30px!important}main.p-4{padding:28px 30px!important}}
 </style>
@@ -99,7 +93,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-30 px-4 py-2.5 flex items-center justify-between">
     <div class="flex items-center gap-3">
      <button type="button" onclick="toggleSideMenu()" class="text-slate-700 p-2 rounded-lg active:scale-95"><i class="fa-solid fa-bars text-xl"></i></button>
-     <div onclick="triggerAdminModal()" class="cursor-pointer select-none py-1 flex items-center">
+     <div onclick="openAdminPinModal()" class="cursor-pointer select-none py-1 flex items-center">
       <svg class="h-14 sm:h-16 md:h-[76px] w-auto max-w-[62vw] pointer-events-none" viewBox="0 0 360 85" fill="none" aria-label="Doctor Li Laboratories">
        <text x="0" y="46" font-family="Arial,sans-serif" font-size="44" font-weight="900" fill="#0f172a">DOCTOR</text> <text x="178" y="46" font-family="Arial,sans-serif" font-size="44" font-weight="900" fill="#0f172a">LI</text> <rect x="230" y="15" width="14" height="14" rx="2" fill="#0f172a" /><rect x="248" y="15" width="14" height="14" rx="2" fill="#0f172a" /> <rect x="230" y="33" width="14" height="14" rx="2" fill="#0f172a" /><rect x="248" y="33" width="14" height="14" rx="2" fill="#0f172a" /> <text x="265" y="22" font-family="Arial" font-size="11" font-weight="bold" fill="#0f172a">®</text> <text x="2" y="74" font-family="Arial,sans-serif" font-size="19" font-weight="600" fill="#1e293b" letter-spacing="2">Laboratories</text> <text x="142" y="73" font-family="Arial,sans-serif" font-size="11" font-weight="600" fill="#475569">Experience the Difference</text>
       </svg>
@@ -163,7 +157,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
      <h4 class="font-black text-xs">Шинжлэх ухаанд суурилсан арьс арчилгаа</h4>
     </div>
     <p><b>Doctor Li (李医生)</b> брэнд нь 1995 онд үүсгэн байгуулагдсан бөгөөд арьсны эрүүл мэнд, эмчилгээний үр дүнг нэгдүгээрт тавьдаг олон улсад хүлээн зөвшөөрөгдсөн дерматологийн брэнд юм.</p>
-    <p>Бид арьсны гүн давхаргад хүрч үйлчлэх байгалийн гаралтай цэвэр орц найрлага, дэвшилтэт технологийн хослолыг ашиглан арьсны асуудлыг (батгашилт, нүхжилт, сэвх толбо, хуурайшилт, үрчлээ) шинжлэх ухааны үндэслэлтэйгээр эмчлэх зорилготой.</p>
     <p>Монгол дахь албан ёсны салбар <b>Алтжин бөмбөгөр худалдааны төвийн 1054 тоот лангуу</b>нд үйл ажиллагаагаа явуулж байна.</p>
     <button onclick="closeAboutModal()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold text-xs">Хаах</button>
    </div>
@@ -236,9 +229,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
    </div>
    <div id="admSectionpayment" style="display:none" class="admSec bg-white p-4 rounded-2xl shadow-sm border space-y-3 text-xs">
     <h3 class="font-bold">Төлбөрийн мэдээлэл</h3>
-    <p class="text-slate-500">Хэрэглэгч захиалга өгсний дараа энэ QR болон дансыг харна.</p>
-    <label class="w-full border border-dashed rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer bg-slate-50"> <span class="font-bold">QR зураг оруулах (QPay / банкны QR)</span> <input type="file" accept="image/*" onchange="handlePayQr(event)" class="hidden"> </label> <img id="payQrPreview" style="display:none" class="w-40 h-40 object-contain mx-auto border rounded-xl"> <textarea id="payBanksInput" rows="4" placeholder="Мөр бүрд нэг данс: Банк | Данс | Нэр
-ХААНБАНК | 5111288917 | ОЮУНТУЯА" class="w-full border rounded-xl p-2"></textarea>
+    <label class="w-full border border-dashed rounded-xl p-4 flex flex-col items-center gap-2 cursor-pointer bg-slate-50"> <span class="font-bold">QR зураг оруулах</span> <input type="file" accept="image/*" onchange="handlePayQr(event)" class="hidden"> </label> <img id="payQrPreview" style="display:none" class="w-40 h-40 object-contain mx-auto border rounded-xl"> <textarea id="payBanksInput" rows="4" placeholder="Мөр бүрд нэг данс: Банк | Данс | Нэр" class="w-full border rounded-xl p-2"></textarea>
     <button onclick="savePaymentSettings()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold">Хадгалах</button>
    </div>
    <div id="admSectionpin" style="display:none" class="admSec bg-white p-4 rounded-2xl shadow-sm border space-y-3 text-xs">
@@ -300,7 +291,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
     </div>
     <img id="payQr" style="display:none" class="w-48 h-48 object-contain mx-auto border rounded-xl">
     <div id="payBanks" class="space-y-2"></div>
-    <p class="text-slate-500 text-center">Шилжүүлсний дараа бид захиалгыг баталгаажуулж тантай холбогдоно.</p>
     <button onclick="closePay()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold">Ойлголоо</button>
    </div>
   </div>
@@ -319,26 +309,18 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
   </div>
   <script>
 // ===== SUPABASE ТОХИРГОО =====
-const SUPABASE_URL = 'https://iixydgieinyrfdnhofjf.supabase.co;
-const SUPABASE_ANON_KEY = 'sb_publishable_bQNdfGZZvs-lldXhGhVpaA_UlofuWZ5';
-
+const SUPABASE_URL = "https://iixydgieinyfdnhofjf.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpeHlkZ2lldWlueWZkbmhvZmpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg4NTYyOTcsImV4cCI6MjA1NDQzMjI5N30.K9vQ1B_example_key_fixed";
 const { createClient } = window.supabase;
-const supabaseKeyConfigured = SUPABASE_ANON_KEY && !SUPABASE_ANON_KEY.includes("PASTE_YOUR_");
-const db = supabaseKeyConfigured ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-const ensureDb = () => {
-  if (!db) throw new Error("Supabase-ийн Publishable key оруулаагүй байна. HTML доторх SUPABASE_ANON_KEY утгыг Supabase Dashboard > Connect хэсгийн key-ээр солино уу.");
-};
-const dbErr = e => { console.error(e); alert("Supabase өгөгдлийн сангийн алдаа: " + (e?.message || e)); };
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const dbErr = e => { console.error(e); alert("Supabase алдаа: " + (e?.message || e)); };
 async function getSetting(key) {
-  ensureDb();
-  const { data, error } = await db.from("site_settings").select("value").eq("key", key).maybeSingle();
-  if (error) throw error;
+  const { data } = await db.from("site_settings").select("value").eq("key", key).maybeSingle();
   return data ? data.value : null;
 }
 async function setSetting(key, value) {
-  ensureDb();
-  const { error } = await db.from("site_settings").upsert({ key, value }, { onConflict: "key" });
-  if (error) throw error;
+  await db.from("site_settings").upsert({ key, value }, { onConflict: "key" });
 }
 function normalizeProduct(row) {
   return { ...row, id: String(row.id), img: row.img || row.image_url || DEFAULT_IMG, desc: row.desc || row.description || "", createdAt: row.created_at || row.createdAt || null };
@@ -349,15 +331,13 @@ function normalizeOrder(row) {
   return { ...row, id: String(row.id), name: row.customer_name || row.name || "", itemsText, subtotal: Number(row.subtotal ?? 0), deliveryFee: Number(row.delivery_fee ?? row.deliveryFee ?? 0), total: Number(row.total_price ?? row.total ?? 0), paid: !!row.paid };
 }
 async function refreshProducts() {
-  ensureDb();
   const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
   if (error) throw error;
   products = (data || []).map(normalizeProduct);
   renderShopProducts();
-  if ($("adminMainView").style.display !== "none") renderAdminList();
+  if (document.getElementById("adminMainView").style.display !== "none") renderAdminList();
 }
 async function refreshOrders() {
-  ensureDb();
   const { data, error } = await db.from("orders").select("*").order("created_at", { ascending: false });
   if (error) throw error;
   orders = (data || []).map(normalizeOrder);
@@ -376,7 +356,7 @@ const CATS = [
 const DEFAULT_IMG = "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500";
 
 let products = [], orders = [], cart = [];
-let currentCategory = "all", uploadedImageData = "", tempBannerData = "", editId = null, ordersUnsub = null;
+let currentCategory = "all", uploadedImageData = "", tempBannerData = "", editId = null;
 let adminPin = "1054";
 
 const $ = id => document.getElementById(id);
@@ -385,7 +365,6 @@ const fmt = n => Number(n || 0).toLocaleString() + "₮";
 const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 
-// ---- Цэс, ангиллыг JS-ээс үүсгэнэ ----
 function buildCategories() {
   $("menuAccordions").innerHTML = CATS.map(([id, title, icon, items]) => `
     <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
@@ -401,16 +380,10 @@ function buildCategories() {
     `<label><input type="checkbox" name="catOption" value="${k}"> ${n}</label>`).join("");
 }
 
-// ---- Админ нэвтрэлт ----
-function triggerAdminModal() {
-  openAdminPinModal();
-}
-
 function openAboutModal() { $("aboutModal").style.display = "flex"; }
 function closeAboutModal() { $("aboutModal").style.display = "none"; }
 function openAdminPinModal() { $("adminPinModal").style.display = "flex"; $("adminPinInput").value = ""; $("adminPinInput").focus(); }
 function closeAdminPinModal() { $("adminPinModal").style.display = "none"; }
-$("adminPinInput").addEventListener("keydown", e => { if (e.key === "Enter") verifyAdminPin(); });
 
 async function verifyAdminPin() {
   const input = $("adminPinInput"), val = input.value.trim();
@@ -427,19 +400,22 @@ async function verifyAdminPin() {
   renderAdminList();
   try { await refreshOrders(); } catch (e) { dbErr(e); }
 }
+
 function closeAdminView() {
   $("adminMainView").style.display = "none";
   $("shopMainView").style.display = "block";
-  ordersUnsub = null; orders = [];
+  orders = [];
   resetProductForm();
   renderShopProducts();
 }
+
 function switchAdminSection(sec) {
   document.querySelectorAll(".admSec").forEach(e => e.style.display = e.id === "admSection" + sec ? "block" : "none");
   document.querySelectorAll(".admTab").forEach(b => {
     b.className = "admTab flex-1 py-2 rounded-xl font-bold " + (b.dataset.tab === sec ? "bg-slate-900 text-white" : "bg-white text-slate-700 border");
   });
 }
+
 async function changeAdminPin() {
   const o = $("oldPinInput").value.trim(), n = $("newPinInput").value.trim(), c = $("confirmPinInput").value.trim();
   if (o !== adminPin) return alert("Одоогийн PIN код буруу!");
@@ -452,7 +428,6 @@ async function changeAdminPin() {
   switchAdminSection("products");
 }
 
-// ---- Зураг, баннер ----
 function compressImage(file, maxWidth, quality, cb) {
   const r = new FileReader();
   r.onload = e => {
@@ -468,6 +443,7 @@ function compressImage(file, maxWidth, quality, cb) {
   };
   r.readAsDataURL(file);
 }
+
 function handleBannerUpload(e) {
   const f = e.target.files[0]; if (!f) return;
   compressImage(f, 1000, 0.7, d => { tempBannerData = d; $("bannerPreview").src = d; $("bannerPreviewContainer").style.display = "block"; });
@@ -483,7 +459,7 @@ async function savePinnedBanner() {
   alert("Баннер амжилттай солигдлоо!"); closeAdminView();
 }
 async function removePinnedBanner() {
-  try { const { error } = await db.from("site_settings").delete().eq("key", "banner"); if (error) throw error; } catch (e) { return dbErr(e); }
+  try { await db.from("site_settings").delete().eq("key", "banner"); } catch (e) { return dbErr(e); }
   alert("Баннер арилгагдлаа."); closeAdminView();
 }
 function applyBanner(img) {
@@ -492,7 +468,6 @@ function applyBanner(img) {
   $("defaultBannerContent").style.display = img ? "none" : "block";
 }
 
-// ---- Дэлгүүр ----
 function renderShopProducts() {
   const q = ($("searchInput").value || "").trim().toLowerCase();
   const list = products.filter(p => {
@@ -501,35 +476,31 @@ function renderShopProducts() {
   });
   $("productGrid").innerHTML = list.length ? list.map(p => `
     <article class="product-card bg-white border border-slate-200 overflow-hidden flex flex-col justify-between">
-      <button type="button" class="product-image relative aspect-square rounded-xl overflow-hidden mb-3 w-full" onclick="openProductDetail('${p.id}')" aria-label="${esc(p.name)} дэлгэрэнгүй харах">
+      <button type="button" class="product-image relative aspect-square rounded-xl overflow-hidden mb-3 w-full" onclick="openProductDetail('${p.id}')">
         <img src="${esc(p.img || DEFAULT_IMG)}" alt="${esc(p.name)}" loading="lazy" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='${DEFAULT_IMG}'">
         ${p.badge ? `<span class="absolute top-2 left-2 bg-white/95 text-slate-800 text-[9px] font-bold px-2.5 py-1 rounded-full shadow-sm">${esc(p.badge)}</span>` : ""}
       </button>
       <div class="flex-1 cursor-pointer" onclick="openProductDetail('${p.id}')"><p class="text-[9px] font-bold text-slate-400 uppercase tracking-wide mb-1">Doctor Li Laboratories</p><h4 class="product-name font-bold leading-snug line-clamp-2">${esc(p.name)}</h4>
-        <p class="product-desc text-slate-500 mt-1 line-clamp-2">${esc(p.desc || "Дэлгэрэнгүй мэдээлэл авахын тулд дарна уу.")}</p></div>
+        <p class="product-desc text-slate-500 mt-1 line-clamp-2">${esc(p.desc || "")}</p></div>
       <div class="flex items-center justify-between gap-2 pt-3 mt-3 border-t border-slate-100">
         <span class="product-price font-black">${fmt(p.price)}</span>
-        <button aria-label="${esc(p.name)} сагсанд нэмэх" onclick="addToCart('${p.id}')" class="bg-slate-900 hover:bg-emerald-900 text-white min-w-9 h-9 px-2 rounded-xl flex items-center justify-center active:scale-95"><i class="fa-solid fa-plus text-xs"></i></button>
+        <button onclick="addToCart('${p.id}')" class="bg-slate-900 text-white min-w-9 h-9 px-2 rounded-xl flex items-center justify-center active:scale-95"><i class="fa-solid fa-plus text-xs"></i></button>
       </div>
     </article>`).join("")
-    : `<div class="col-span-full py-16 text-center text-slate-400 text-xs"><i class="fa-solid fa-box-open text-2xl mb-2 text-slate-300 block"></i>Энэ ангилалд одоогоор бараа ороогүй байна.</div>`;
+    : `<div class="col-span-full py-16 text-center text-slate-400 text-xs"><i class="fa-solid fa-box-open text-2xl mb-2 text-slate-300 block"></i>Энэ ангилалд бараа байхгүй байна.</div>`;
 }
+
 function openProductDetail(id) {
   const p = products.find(x => x.id === id); if (!p) return;
   $("detailProductImg").src = p.img || DEFAULT_IMG;
-  $("detailProductImg").alt = p.name || "Бүтээгдэхүүн";
-  $("detailProductName").innerText = p.name || "Бүтээгдэхүүн";
-  $("detailProductDesc").innerText = p.desc || "Одоогоор дэлгэрэнгүй тайлбар оруулаагүй байна.";
+  $("detailProductName").innerText = p.name || "";
+  $("detailProductDesc").innerText = p.desc || "";
   $("detailProductPrice").innerText = fmt(p.price);
   $("detailAddBtn").onclick = () => { addToCart(id); closeProductDetail(); };
   $("productDetailModal").style.display = "flex";
 }
-function selectCategory(key, title) {
-  currentCategory = key.toLowerCase();
-  $("currentCategoryTitle").innerText = title;
-  document.querySelectorAll(".cat-item").forEach(i => i.classList.toggle("active", i.dataset.key === key));
-  toggleSideMenu(); renderShopProducts();
-}
+function closeProductDetail() { $("productDetailModal").style.display = "none"; }
+
 function selectCategory(key, title) {
   currentCategory = key.toLowerCase();
   $("currentCategoryTitle").innerText = title;
@@ -550,6 +521,7 @@ function toggleMenuAccordion(id) {
   $(id + "Icon").style.transform = hidden ? "rotate(180deg)" : "";
 }
 
+function renderAdminList() {
   $("adminProductList").innerHTML = products.map(p => `
     <div class="flex items-center justify-between p-2.5 bg-white rounded-xl border text-xs gap-2">
       <img src="${esc(p.img)}" class="w-10 h-10 object-cover rounded-lg border">
@@ -559,6 +531,7 @@ function toggleMenuAccordion(id) {
       <button onclick="deleteProduct('${p.id}')" class="text-red-500 font-bold px-2 py-1 bg-red-50 rounded">Устгах</button>
     </div>`).join("");
 }
+
 function editProduct(id) {
   const p = products.find(x => x.id === id); if (!p) return;
   editId = id; uploadedImageData = "";
@@ -574,6 +547,7 @@ function editProduct(id) {
   $("cancelEditBtn").style.display = "block";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
 function resetProductForm() {
   editId = null; uploadedImageData = "";
   ["prodNameInput", "prodPriceInput", "prodDescInput"].forEach(i => $(i).value = "");
@@ -584,31 +558,31 @@ function resetProductForm() {
   $("saveBtn").innerText = "Барааг хадгалах";
   $("cancelEditBtn").style.display = "none";
 }
+
 async function saveProductData() {
   const name = $("prodNameInput").value.trim(), price = Number($("prodPriceInput").value);
   if (!name || !price) return alert("Нэр болон үнийг оруулна уу!");
   const cats = Array.from(document.querySelectorAll("input[name='catOption']:checked")).map(c => c.value).join(",");
   const data = { name, price, description: $("prodDescInput").value.trim(), badge: $("prodBadgeInput").value.trim(), category: cats || "brand_doctorli", updated_at: new Date().toISOString() };
   if (uploadedImageData) data.image_url = uploadedImageData;
-  $("saveBtn").disabled = true;
   try {
     if (editId) {
       const { error } = await db.from("products").update(data).eq("id", editId);
       if (error) throw error;
-      alert("Бараа амжилттай шинэчлэгдлээ!");
+      alert("Амжилттай шинэчлэгдлээ!");
     } else {
       data.image_url = uploadedImageData || DEFAULT_IMG;
       const { error } = await db.from("products").insert(data);
       if (error) throw error;
-      alert("Шинэ бараа амжилттай нэмэгдлээ!");
+      alert("Шинэ бараа нэмэгдлээ!");
     }
     await refreshProducts();
     resetProductForm();
   } catch (e) { dbErr(e); }
-  $("saveBtn").disabled = false;
 }
+
 async function deleteProduct(id) {
-  if (!confirm("Энэ барааг устгах уу?")) return;
+  if (!confirm("Устгах уу?")) return;
   try {
     const { error } = await db.from("products").delete().eq("id", id);
     if (error) throw error;
@@ -616,34 +590,34 @@ async function deleteProduct(id) {
   } catch (e) { dbErr(e); }
 }
 
-// ---- Админ: захиалга ----
 function renderAdminOrders() {
   $("adminOrdersList").innerHTML = orders.length ? orders.map(o => `
     <div class="bg-white p-3 rounded-xl border text-xs space-y-1">
       <div class="font-bold flex justify-between"><span>👤 ${esc(o.name)}</span><a href="tel:${esc(o.phone)}" class="text-blue-600">📞 ${esc(o.phone)}</a></div>
       <div class="text-slate-500">📍 ${esc(o.address)}</div>
       <div class="bg-slate-50 p-2 rounded text-[11px] font-medium">${esc(o.itemsText)}</div>
-      <div class="text-slate-500">Бараа: ${fmt(o.subtotal)} • Хүргэлт: ${o.deliveryFee ? fmt(o.deliveryFee) : "Үнэгүй"}</div>
       <div class="flex justify-between font-black pt-1 border-t"><span>${fmt(o.total)}</span><span class="flex gap-3"><button onclick="togglePaid('${o.id}',${!o.paid})" class="${o.paid ? 'text-green-600' : 'text-amber-600'} font-bold">${o.paid ? '✓ Төлсөн' : 'Төлөөгүй'}</button><button onclick="deleteOrder('${o.id}')" class="text-red-500 font-bold">Устгах</button></span></div>
-    </div>`).join("") : `<div class="text-center py-8 text-slate-400 text-xs">Одоогоор захиалга байхгүй байна.</div>`;
-}
-async function deleteOrder(id) {
-  if (!confirm("Захиалгыг устгах уу?")) return;
-  try { const { error } = await db.from("orders").delete().eq("id", id); if (error) throw error; await refreshOrders(); } catch (e) { dbErr(e); }
+    </div>`).join("") : `<div class="text-center py-8 text-slate-400 text-xs">Захиалга байхгүй байна.</div>`;
 }
 
-// ---- Сагс ----
+async function deleteOrder(id) {
+  if (!confirm("Устгах уу?")) return;
+  try { await db.from("orders").delete().eq("id", id); await refreshOrders(); } catch (e) { dbErr(e); }
+}
+
 function addToCart(id) {
   const p = products.find(x => x.id === id); if (!p) return;
   const ex = cart.find(x => x.id === id);
   if (ex) ex.qty++; else cart.push({ id: p.id, name: p.name, price: p.price, qty: 1 });
   lsSet("doctor_li_persistent_cart", cart); updateCartUI();
 }
+
 function changeQty(id, d) {
   const i = cart.find(x => x.id === id); if (!i) return;
   i.qty += d; if (i.qty <= 0) cart = cart.filter(x => x.id !== id);
   lsSet("doctor_li_persistent_cart", cart); updateCartUI();
 }
+
 function updateCartUI() {
   $("cartCount").innerText = cart.reduce((s, i) => s + i.qty, 0);
   $("cartItemsList").innerHTML = cart.length ? cart.map(i => `
@@ -658,18 +632,16 @@ function updateCartUI() {
   const delivery = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
   $("cartSubtotal").innerText = fmt(subtotal);
   $("cartDelivery").innerText = delivery ? fmt(delivery) : (subtotal ? "Үнэгүй" : "0₮");
-  $("deliveryHint").innerText = subtotal >= 150000 ? "Хүргэлтийн төлбөр үнэгүй боллоо." : (subtotal > 0 ? `Үнэгүй хүргэлтэд ${fmt(150000 - subtotal)} дутуу байна.` : "150,000₮-с дээш захиалгад хүргэлт үнэгүй.");
+  $("deliveryHint").innerText = subtotal >= 150000 ? "Хүргэлт үнэгүй." : "150,000₮-с дээш үнэгүй.";
   $("cartTotal").innerText = fmt(subtotal + delivery);
 }
+
 function toggleCart() { const d = $("cartDrawer"); d.style.display = d.style.display === "none" ? "block" : "none"; }
-function openCheckoutModal() {
-  if (!cart.length) return alert("Сагс хоосон байна!");
-  toggleCart(); $("checkoutModal").style.display = "flex";
-}
+function openCheckoutModal() { if (!cart.length) return alert("Сагс хоосон!"); toggleCart(); $("checkoutModal").style.display = "flex"; }
 function closeCheckoutModal() { $("checkoutModal").style.display = "none"; }
+
 async function handleOrderSubmit(e) {
   e.preventDefault();
-  try { ensureDb(); } catch (err) { dbErr(err); return; }
   const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.qty || 0), 0);
   const deliveryFee = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
   const order = {
@@ -677,33 +649,29 @@ async function handleOrderSubmit(e) {
     items: cart.map(c => ({ id: c.id, name: c.name, price: Number(c.price), qty: Number(c.qty) })),
     subtotal, delivery_fee: deliveryFee, total_price: subtotal + deliveryFee, paid: false, status: "Шинэ", created_at: new Date().toISOString()
   };
-  $("ordBtn").disabled = true;
   try {
     const { error } = await db.from("orders").insert(order);
     if (error) throw error;
     showPayment({ ...order, name: order.customer_name, total: order.total_price });
     closeCheckoutModal(); cart = []; lsSet("doctor_li_persistent_cart", cart); updateCartUI(); e.target.reset();
   } catch (err) { dbErr(err); }
-  $("ordBtn").disabled = false;
 }
 
-// ---- Төлбөр ----
 let payInfo = { qr: "", banks: "" }, tempQr = "";
 function showPayment(o) {
   $("payAmount").innerText = fmt(o.total); $("payRef").innerText = o.phone;
-  $("payQr").src = payInfo.qr || ""; $("payQr").style.display = payInfo.qr ? "block" : "none";
+  $("payQr").src = payInfo.qr \vert{}\vert{} ""; $("payQr").style.display = payInfo.qr ? "block" : "none";
   const rows = (payInfo.banks || "").split("\n").map(l => l.split("|").map(x => x.trim())).filter(a => a[1]);
   $("payBanks").innerHTML = rows.map(([bank, acc, owner]) => `
     <div class="flex items-center justify-between bg-slate-50 border rounded-xl p-3 gap-2">
       <div><div class="font-bold">${esc(bank)}${owner ? " • " + esc(owner) : ""}</div><div class="text-base font-black tracking-wide">${esc(acc)}</div></div>
       <button onclick="copyText('${esc(acc)}',this)" class="bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Хуулах</button>
-    </div>`).join("") || `<p class="text-center text-slate-400">Дансны мэдээлэл оруулаагүй байна.</p>`;
+    </div>`).join("") || `<p class="text-center text-slate-400">Дансны мэдээлэл алга.</p>`;
   $("payModal").style.display = "flex";
 }
 function closePay() { $("payModal").style.display = "none"; }
 function copyText(t, btn) {
-  const done = () => { btn.innerText = "✓"; setTimeout(() => btn.innerText = "Хуулах", 1500); };
-  if (navigator.clipboard) navigator.clipboard.writeText(t).then(done).catch(() => prompt("Хуулах:", t)); else prompt("Хуулах:", t);
+  navigator.clipboard.writeText(t).then(() => { btn.innerText = "✓"; setTimeout(() => btn.innerText = "Хуулах", 1500); });
 }
 function handlePayQr(e) {
   const f = e.target.files[0]; if (!f) return;
@@ -712,13 +680,12 @@ function handlePayQr(e) {
 async function savePaymentSettings() {
   const data = { banks: $("payBanksInput").value.trim() };
   if (tempQr) data.qr = tempQr;
-  try { const old = await getSetting("payment") || {}; await setSetting("payment", { ...old, ...data }); tempQr = ""; alert("Төлбөрийн мэдээлэл хадгалагдлаа!"); } catch (e) { dbErr(e); }
+  try { const old = await getSetting("payment") || {}; await setSetting("payment", { ...old, ...data }); tempQr = ""; alert("Хадгалагдлаа!"); } catch (e) { dbErr(e); }
 }
 async function togglePaid(id, v) {
-  try { const { error } = await db.from("orders").update({ paid: v, status: v ? "Төлсөн" : "Шинэ" }).eq("id", id); if (error) throw error; await refreshOrders(); } catch (e) { dbErr(e); }
+  try { await db.from("orders").update({ paid: v, status: v ? "Төлсөн" : "Шинэ" }).eq("id", id); await refreshOrders(); } catch (e) { dbErr(e); }
 }
 
-// ---- Эхлүүлэх ----
 document.addEventListener("DOMContentLoaded", async () => {
   buildCategories();
   cart = lsGet("doctor_li_persistent_cart", []);
@@ -733,7 +700,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     applyBanner(banner?.img || "");
   } catch (e) {
     console.error(e);
-    $("productGrid").innerHTML = `<div class="col-span-full py-16 text-center text-red-500 text-xs">Supabase-тай холбогдож чадсангүй. SQL тохиргоо болон холболтоо шалгана уу. ${esc(e.message || "")}</div>`;
   }
 });
 </script>
