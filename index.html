@@ -766,6 +766,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   $("ordBtn").disabled = false;
 }
 
+
 function showFinoPayment(amount, ref, qrImage, deepLinks) {
   $("payAmount").innerText = fmt(amount); 
   $("payRef").innerText = ref;
@@ -785,6 +786,7 @@ function showFinoPayment(amount, ref, qrImage, deepLinks) {
   $("payBanks").innerHTML = linksHtml || `<p class="text-center text-slate-400">Банкны апп холбогдоогүй байна.</p>`;
   $("payModal").style.display = "flex";
 }
-
- </body>
+</script>
+</body>
 </html>
+  
