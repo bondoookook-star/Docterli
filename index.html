@@ -402,12 +402,10 @@ function buildCategories() {
 }
 
 // ---- Админ нэвтрэлт ----
-let clickCount = 0, clickTimer = null;
 function triggerAdminModal() {
-  clickCount++; clearTimeout(clickTimer);
-  clickTimer = setTimeout(() => clickCount = 0, 800);
-  if (clickCount >= 3) { clickCount = 0; openAdminPinModal(); }
+  openAdminPinModal();
 }
+
 function openAboutModal() { $("aboutModal").style.display = "flex"; }
 function closeAboutModal() { $("aboutModal").style.display = "none"; }
 function openAdminPinModal() { $("adminPinModal").style.display = "flex"; $("adminPinInput").value = ""; $("adminPinInput").focus(); }
@@ -526,23 +524,32 @@ function openProductDetail(id) {
   $("detailAddBtn").onclick = () => { addToCart(id); closeProductDetail(); };
   $("productDetailModal").style.display = "flex";
 }
-function closeProductDetail() { $("productDetailModal").style.display = "none"; }
-
 function selectCategory(key, title) {
   currentCategory = key.toLowerCase();
   $("currentCategoryTitle").innerText = title;
   document.querySelectorAll(".cat-item").forEach(i => i.classList.toggle("active", i.dataset.key === key));
   toggleSideMenu(); renderShopProducts();
 }
-function toggleSideMenu() { const d = $("sideMenuDrawer"); d.style.display = d.style.display === "none" ? "block" : "none"; }
+function selectCategory(key, title) {
+  currentCategory = key.toLowerCase();
+  $("currentCategoryTitle").innerText = title;
+  document.querySelectorAll(".cat-item").forEach(i => i.classList.toggle("active", i.dataset.key === key));
+  toggleSideMenu(); renderShopProducts();
+}
+
+function toggleSideMenu() {
+  const d = document.getElementById("sideMenuDrawer");
+  if (d) {
+    d.style.display = d.style.display === "none" || d.style.display === "" ? "block" : "none";
+  }
+}
+
 function toggleMenuAccordion(id) {
   const el = $(id), hidden = el.style.display === "none";
   el.style.display = hidden ? "block" : "none";
   $(id + "Icon").style.transform = hidden ? "rotate(180deg)" : "";
 }
 
-// ---- Админ: бараа (нэмэх / засах / устгах) ----
-function renderAdminList() {
   $("adminProductList").innerHTML = products.map(p => `
     <div class="flex items-center justify-between p-2.5 bg-white rounded-xl border text-xs gap-2">
       <img src="${esc(p.img)}" class="w-10 h-10 object-cover rounded-lg border">
