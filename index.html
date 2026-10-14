@@ -329,12 +329,25 @@ const ensureDb = () => {
 };
 const dbErr = e => { console.error(e); alert("Supabase өгөгдлийн сангийн алдаа: " + (e?.message || e)); };
 
+async function getSetting(key) {
+  ensureDb();
+  const { data, error } = await db.from("settings").select("value").eq("key", key).maybeSingle();
+  if (error) throw error;
+  return data ? data.value : null;
+}
+async function setSetting(key, value) {
+  ensureDb();
+  const { error } = await db.from("settings").upsert({ key, value }, { onConflict: "key" });
+  if (error) throw error;
+}
+function normalizeProduct(row) {
+  return { ...row, id: String(row.id), name: row.title || row.name || "", img: row.image || row.img || row.image_url || DEFAULT_IMG, desc: row.description || row.desc || "", createdAt: row.created_at || row.createdAt || null };
+}
 function normalizeOrder(row) {
   const rawItems = row.items;
   const itemsText = Array.isArray(rawItems) ? rawItems.map(x => `${x.name || x.product_name || "Бараа"} (${x.qty || x.quantity || 1}ш)`).join(", ") : String(rawItems || "");
   return { ...row, id: String(row.id), name: row.customer_name || row.name || "", itemsText, subtotal: Number(row.subtotal ?? 0), deliveryFee: Number(row.delivery_fee ?? row.deliveryFee ?? 0), total: Number(row.total_price ?? row.total ?? 0), paid: !!row.paid };
 }
-
 async function refreshProducts() {
   ensureDb();
   const { data, error } = await db.from("products").select("*").order("created_at", { ascending: false });
