@@ -649,13 +649,7 @@ function updateCartUI() {
       <span>${i.qty}</span>
       <button onclick="changeQty('${i.id}',1)" class="w-6 h-6 bg-white border rounded">+</button>
       <span class="font-black">${fmt(i.price * i.qty)}</span>
-    </div>`).join("") : `<div class="text-center py-8 text-slate-400 text-xs">Сагс хоосон байна.</div>`;
-  const subtotal = cart.reduce((s, i) => s + Number(i.price || 0) * Number(i.qty || 0), 0);
-  const delivery = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
-  $("cartSubtotal").innerText = fmt(subtotal);
-  $("cartDelivery").innerText = delivery ? fmt(delivery) : (subtotal ? "Үнэгүй" : "0₮");
-  $("deliveryHint").innerText = subtotal >= 150000 ? "Хүргэлтийн төлбөр үнэгүй боллоо." : (subtotal > 0 ? `Үнэгүй хүргэлтэд ${fmt(150000 - subtotal)} дутуу байна.` : "150,000₮-с дээш захиалгад хүргэлт үнэгүй.");
-  $("cartTotal").innerText = fmt(subtotal + delivery);
+    showPayment
 }
 function toggleCart() { const d = $("cartDrawer"); d.style.display = d.style.display === "none" ? "block" : "none"; }
 function openCheckoutModal() {
@@ -663,33 +657,114 @@ function openCheckoutModal() {
   toggleCart(); $("checkoutModal").style.display = "flex";
 }
 function closeCheckoutModal() { $("checkoutModal").style.display = "none"; }
+
 async function handleOrderSubmit(e) {
   e.preventDefault();
-  try { ensureDb(); } catch (err) { dbErr(err); return; }
-  const subtotal = cart.reduce((sum, item) => sum + Number(item.price || 0) * Number(item.qty || 0), 0);
-  const deliveryFee = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
-  const order = {
-    name: $("ordName").value.trim(), phone: $("ordPhone").value.trim(), address: $("ordAddress").value.trim(),
-    items: cart.map(c => ({ id: c.id, name: c.name, price: Number(c.price), qty: Number(c.qty) })),
-    subtotal, delivery_fee: deliveryFee, total: subtotal + deliveryFee, paid: false, status: "Шинэ"
-  };
-  $("ordBtn").disabled = true;
+
   try {
-    const { error } = await db.from("orders").insert(order);
+    ensureDb();
+  } catch (err) {
+    dbErr(err);
+    return;
+  }
+
+  const subtotal = cart.reduce(
+    (sum, item) =>
+      sum + Number(item.price || 0) * Number(item.qty || 0),
+    0
+  );
+
+  if (!cart.length) {
+    alert("Сагс хоосон байна!");
+    return;
+  }
+
+  const deliveryFee =
+    subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
+
+  const order = {
+    name: $("ordName").value.trim(),
+    phone: $("ordPhone").value.trim(),
+    address: $("ordAddress").value.trim(),
+    items: cart.map(c => ({
+      id: c.id,
+      name: c.name,
+      price: Number(c.price),
+      qty: Number(c.qty)
+    })),
+    subtotal,
+    delivery_fee: deliveryFee,
+    total: subtotal + deliveryFee,
+    paid: false,
+    status: "Шинэ"
+  };
+
+  $("ordBtn").disabled = true;
+
+  try {
+    const { data: savedOrder, error } = await db
+      .from("orders")
+      .insert(order)
+      .select("id")
+      .single();
+
     if (error) throw error;
-    showPayment({ ...order, name: order.name, total: order.total });
-    closeCheckoutModal(); cart = []; lsSet("doctor_li_persistent_cart", cart); updateCartUI(); e.target.reset();
-  } catch (err) { dbErr(err); }
-  $("ordBtn").disabled = false;
+
+    const response = await fetch("/api/fino/create-invoice", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: order.total,
+        orderId: savedOrder.id
+      })
+    });
+
+    const invoice = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        invoice.error || "FinoPay QR үүсгэж чадсангүй"
+      );
+    }
+
+    if (!invoice.qr_image) {
+      throw new Error(
+        "Нэхэмжлэл үүссэн боловч QR зураг ирсэнгүй. Захиалгаа давхар бүү илгээгээрэй."
+      );
+    }
+
+    showPayment({
+      ...order,
+      qr: invoice.qr_image,
+      invoiceNo: invoice.invoice_no
+    });
+
+    closeCheckoutModal();
+    cart = [];
+    lsSet("doctor_li_persistent_cart", cart);
+    updateCartUI();
+    e.target.reset();
+
+  } catch (err) {
+    console.error(err);
+    alert(
+      "Төлбөрийн QR үүсгэхэд алдаа гарлаа: " +
+      (err.message || "Тодорхойгүй алдаа")
+    );
+  } finally {
+    $("ordBtn").disabled = false;
+  }
 }
+
 
 // ---- Төлбөр ----
 let payInfo = { qr: "", banks: "" }, tempQr = "";
 function showPayment(o) {
   $("payAmount").innerText = fmt(o.total); $("payRef").innerText = o.phone;
-  $("payQr").src = payInfo.qr || ""; $("payQr").style.display = payInfo.qr ? "block" : "none";
+  $("payQr").src = o.qr || payInfo.qr || "";
+$("payQr").style.display = (o.qr || payInfo.qr) ? "block" : "none";
   const rows = (payInfo.banks || "").split("\n").map(l => l.split("|").map(x => x.trim())).filter(a => a[1]);
-  $("payBanks").innerHTML = rows.map(([bank, acc, owner]) => `
+$("payBanks").innerHTML = rows.map(([bank, acc, owner]) => `
     <div class="flex items-center justify-between bg-slate-50 border rounded-xl p-3 gap-2">
       <div><div class="font-bold">${esc(bank)}${owner ? " • " + esc(owner) : ""}</div><div class="text-base font-black tracking-wide">${esc(acc)}</div></div>
       <button onclick="copyText('${esc(acc)}',this)" class="bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Хуулах</button>
