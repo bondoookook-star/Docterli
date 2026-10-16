@@ -649,7 +649,13 @@ function updateCartUI() {
       <span>${i.qty}</span>
       <button onclick="changeQty('${i.id}',1)" class="w-6 h-6 bg-white border rounded">+</button>
       <span class="font-black">${fmt(i.price * i.qty)}</span>
-    showPayment
+    </div>`).join("")
+    : `<p class="text-center text-slate-400 text-xs py-8">Сагс хоосон байна.</p>`;
+  const subtotal = cart.reduce((s, i) => s + Number(i.price || 0) * Number(i.qty || 0), 0);
+  const delivery = subtotal === 0 || subtotal >= 150000 ? 0 : 7000;
+  $("cartSubtotal").innerText = fmt(subtotal);
+  $("cartDelivery").innerText = delivery ? fmt(delivery) : "Үнэгүй";
+  $("cartTotal").innerText = fmt(subtotal + delivery);
 }
 function toggleCart() { const d = $("cartDrawer"); d.style.display = d.style.display === "none" ? "block" : "none"; }
 function openCheckoutModal() {
