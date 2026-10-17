@@ -1,50 +1,96 @@
+/**
+ * FinoPay payment status endpoint
+ * File: api/fino/check-payment.js
+ * Server-side only
+ */
+
 export default async function handler(req, res) {
-if (req.method !== 'GET') {
-return res.status(405).json({ error: 'Method not allowed' });
-}
+  // Allow GET requests only
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "GET");
+    return res.status(405).json({
+      success: false,
+      error: "Method not allowed",
+    });
+  }
 
-const apiKey = process.env.FINO_API_KEY;
-const terminalNo = process.env.FINO_TERMINAL_NO;
+  // Read credentials from Vercel Environment Variables
+  const apiKey = process.env.FINO_API_KEY;
+  const terminalNo = process.env.FINO_TERMINAL_NO;
 
-if (!apiKey || !terminalNo) {
-return res.status(500).json({ error: 'FinoPay server settings are missing' });
-}
+  if (!apiKey || !terminalNo) {
+    return res.status(500).json({
+      success: false,
+      error: "FinoPay server settings are missing",
+    });
+  }
 
-const invoiceNo = String(req.query.invoice_no || '');
+  // Validate invoice number
+  const rawInvoiceNo = req.query?.invoice_no;
 
-if (!/^INV[A-Za-z0-9_-]+$/.test(invoiceNo)) {
-return res.status(400).json({ error: 'Invalid invoice number' });
-}
+  if (
+    typeof rawInvoiceNo !== "string" ||
+    !/^INV[A-Za-z0-9_-]+$/.test(rawInvoiceNo)
+  ) {
+    return res.status(400).json({
+      success: false,
+      error: "Invalid invoice number",
+    });
+  }
 
-try {
-const response = await fetch(
-"https://qr-api.finovation.mn/api/v1/merchant-api/dynamic-qr/invoices/${encodeURIComponent(invoiceNo)}",
-{
-method: 'GET',
-headers: { 'X-API-Key': apiKey }
-}
-);
+  const invoiceNo = rawInvoiceNo;
 
-const result = await response.json();
+  try {
+    // IMPORTANT: Backticks allow invoiceNo to be inserted into the URL.
+    const url =
+      `https://qr-api.finovation.mn/api/v1/merchant-api/dynamic-qr/invoices/${encodeURIComponent(invoiceNo)}`;
 
-if (!response.ok || !result.success) {
-  return res.status(response.status || 502).json({
-    error: result.message || 'Unable to check payment'
-  });
-}
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "X-API-Key": apiKey,
+        Accept: "application/json",
+      },
+    });
 
-return res.status(200).json({
-  invoice_no: result.data.invoice_no,
-  status: result.data.status,
-  is_paid: result.data.is_paid === true,
-  amount: result.data.amount,
-  expires_at: result.data.expires_at,
-  paid_at: result.data.paid_at || null
-});
+    // Safely parse the provider response
+    let result;
 
-} catch (error) {
-return res.status(502).json({
-error: 'Unable to connect to FinoPay'
-});
-}
+    try {
+      result = await response.json();
+    } catch {
+      return res.status(502).json({
+        success: false,
+        error: "Invalid response from FinoPay",
+      });
+    }
+
+    if (!response.ok || result?.success !== true || !result?.data) {
+      return res.status(response.ok ? 502 : response.status).json({
+        success: false,
+        error:
+          result?.message ||
+          result?.error ||
+          "Unable to check payment",
+      });
+    }
+
+    const invoice = result.data;
+
+    // Return only the fields needed by the shop
+    return res.status(200).json({
+      success: true,
+      invoice_no: invoice.invoice_no ?? invoiceNo,
+      status: invoice.status ?? null,
+      is_paid: invoice.is_paid === true,
+      amount: invoice.amount ?? null,
+      expires_at: invoice.expires_at ?? null,
+      paid_at: invoice.paid_at ?? null,
+    });
+  } catch {
+    return res.status(502).json({
+      success: false,
+      error: "Unable to connect to FinoPay",
+    });
+  }
 }
