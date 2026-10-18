@@ -1,4 +1,3 @@
-
 /**
  * FinoPay dynamic QR invoice endpoint
  * File: api/fino/create-invoice.js
@@ -13,8 +12,8 @@ export default async function handler(req, res) {
     });
   }
 
-  const apiKey = process.env.FINO_API_KEY;
-  const terminalNo = process.env.FINO_TERMINAL_NO;
+  const apiKey = (process.env.FINO_API_KEY || "").trim();
+  const terminalNo = (process.env.FINO_TERMINAL_NO || "").trim();
 
   if (!apiKey || !terminalNo) {
     console.error("FinoPay configuration missing", {
@@ -42,7 +41,8 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      "https://qr-api.finovation.mn/api/v1/merchant-api/dynamic-qr/invoices",
+      "https://qr-api.finovation.mn/api/v1/merchant-api/dynamic-qr/invoices?terminal_no=" +
+        encodeURIComponent(terminalNo),
       {
         method: "POST",
         headers: {
@@ -85,6 +85,9 @@ export default async function handler(req, res) {
 
       console.error("FinoPay invoice request failed", {
         httpStatus: response.status,
+        keyPrefixOk: apiKey.startsWith("fino_live_"),
+        keyHasSpace: /\s/.test(apiKey),
+        keyLength: apiKey.length,
         providerMessage,
       });
 
@@ -98,7 +101,7 @@ export default async function handler(req, res) {
 
     const invoice = data.data;
 
-    if (!invoice.invoice_no || !invoice.qr_payload && !invoice.payment_options?.qr_image) {
+    if (!invoice.invoice_no || (!invoice.qr_payload && !invoice.payment_options?.qr_image)) {
       console.error("FinoPay response missing invoice or QR data", {
         hasInvoiceNo: Boolean(invoice.invoice_no),
         hasQrPayload: Boolean(invoice.qr_payload),
