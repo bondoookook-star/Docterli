@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   const apiKey = (process.env.FINO_API_KEY || "").trim();
   const terminalNo = (process.env.FINO_TERMINAL_NO || "").trim();
 
-  if (!apiKey || !terminalNo) {
+  const apiKey = (process.env.FINO_API_KEY || "").replace(/\s/g, "");
     console.error("FinoPay configuration missing", {
       apiKeyPresent: Boolean(apiKey),
       terminalPresent: Boolean(terminalNo),
