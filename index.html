@@ -301,6 +301,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
      <p class="mt-1">Гүйлгээний утга: <b id="payRef" class="border bg-white px-2 py-0.5 rounded"></b></p>
     </div>
     <img id="payQr" style="display:none" class="w-48 h-48 object-contain mx-auto border rounded-xl">
+    <div id="payDeepLinks"></div>
     <div id="payBanks" class="space-y-2"></div>
     <p class="text-slate-500 text-center">Шилжүүлсний дараа бид захиалгыг баталгаажуулж тантай холбогдоно.</p>
     <button onclick="closePay()" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold">Ойлголоо</button>
@@ -744,7 +745,8 @@ async function handleOrderSubmit(e) {
     showPayment({
       ...order,
       qr: invoice.qr_image,
-      invoiceNo: invoice.invoice_no
+       invoiceNo: invoice.invoice_no,
+  deepLinks: invoice.deep_links || []
     });
 
     closeCheckoutModal();
@@ -777,6 +779,16 @@ $("payBanks").innerHTML = rows.map(([bank, acc, owner]) => `
       <div><div class="font-bold">${esc(bank)}${owner ? " • " + esc(owner) : ""}</div><div class="text-base font-black tracking-wide">${esc(acc)}</div></div>
       <button onclick="copyText('${esc(acc)}',this)" class="bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Хуулах</button>
     </div>`).join("") || `<p class="text-center text-slate-400">Дансны мэдээлэл оруулаагүй байна.</p>`;
+ const dl = (o.deepLinks || []).map(l => {
+  const name = l.name || l.bank_name || l.description || "Банк";
+  const url = l.link || l.url || l.deeplink || l.deep_link || "";
+  const logo = l.logo || l.icon || "";
+  if (!url || /^javascript:/i.test(url)) return "";
+  const src = /^(https?:|data:)/.test(logo) ? logo : "data:image/png;base64," + logo;
+  const img = logo ? `<img src="${src}" class="w-10 h-10 rounded-lg mx-auto object-contain">` : "";
+  return `<a href="${esc(url)}" class="border rounded-xl p-2 text-center text-[10px] font-bold block bg-white">${img}<div class="mt-1">${esc(name)}</div></a>`;
+}).join("");
+$("payDeepLinks").innerHTML = dl ? `<p class="text-xs text-slate-500 text-center mb-2">Банкны апп сонгох</p><div class="grid grid-cols-3 gap-2">${dl}</div>` : "";
   $("payModal").style.display = "flex";
 }
 function closePay() { $("payModal").style.display = "none"; }
