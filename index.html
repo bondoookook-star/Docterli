@@ -180,7 +180,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
      <h3 class="text-sm font-bold">Админ нэвтрэх</h3>
      <p class="text-[11px] text-slate-400">PIN кодоо оруулна уу</p>
     </div>
-    <input id="adminPinInput" type="password" maxlength="8" placeholder="••••" class="w-full text-center tracking-widest text-2xl font-black bg-slate-50 border border-slate-300 rounded-xl py-2.5 focus:outline-none" onkeydown="if(event.key==='Enter')verifyAdminPin()">
+    <input id="adminEmailInput" type="email" placeholder="Имэйл" autocomplete="username" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl py-2.5 px-3 focus:outline-none">
+<input id="adminPinInput" type="password" placeholder="Нууц үг" autocomplete="current-password" class="w-full text-sm bg-slate-50 border border-slate-300 rounded-xl py-2.5 px-3 focus:outline-none" onkeydown="if(event.key==='Enter')verifyAdminPin()">
     <div class="flex gap-2">
      <button type="button" onclick="closeAdminPinModal()" class="w-1/2 border border-slate-200 text-slate-600 font-bold py-2.5 rounded-xl text-xs">Цуцлах</button>
      <button type="button" onclick="verifyAdminPin()" class="w-1/2 bg-slate-900 text-white font-bold py-2.5 rounded-xl text-xs">Орох</button>
@@ -417,13 +418,16 @@ function closeAdminPinModal() { $("adminPinModal").style.display = "none"; }
 $("adminPinInput").addEventListener("keydown", e => { if (e.key === "Enter") verifyAdminPin(); });
 
 async function verifyAdminPin() {
-  const input = $("adminPinInput"), val = input.value.trim();
-  if (!val) { alert("PIN кодоо оруулна уу."); input.focus(); return; }
+  const email = $("adminEmailInput").value.trim();
+  const pass = $("adminPinInput").value;
+  if (!email || !pass) { alert("Имэйл, нууц үгээ оруулна уу."); return; }
   try {
-    const savedPin = await getSetting("admin_pin");
-    adminPin = savedPin ? String(savedPin) : "1054";
+    ensureDb();
+    const { error } = await db.auth.signInWithPassword({ email, password: pass });
+    if (error) { alert("Имэйл эсвэл нууц үг буруу байна!"); $("adminPinInput").value = ""; return; }
+    const { data: isAdm, error: e2 } = await db.rpc("is_admin");
+    if (e2 || !isAdm) { await db.auth.signOut(); alert("Таны имэйл админ эрхгүй байна."); return; }
   } catch (e) { dbErr(e); return; }
-  if (val !== adminPin) { alert("PIN код буруу байна!"); input.value = ""; input.focus(); return; }
   closeAdminPinModal();
   $("shopMainView").style.display = "none";
   $("adminMainView").style.display = "block";
@@ -431,9 +435,10 @@ async function verifyAdminPin() {
   renderAdminList();
   try { await refreshOrders(); } catch (e) { dbErr(e); }
 }
-function closeAdminView() {
+ function closeAdminView() {
   $("adminMainView").style.display = "none";
   $("shopMainView").style.display = "block";
+  db.auth.signOut();
   ordersUnsub = null; orders = [];
   resetProductForm();
   renderShopProducts();
