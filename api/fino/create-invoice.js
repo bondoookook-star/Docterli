@@ -72,7 +72,9 @@ async function handler(req, res) {
         error: "FinoPay response did not contain usable QR information",
       });
     }
+    console.log("deep_links sample", JSON.stringify(invoice.payment_options?.deep_links?.slice(0, 2)));
 
+  
     return res.status(200).json({
       success: true,
       invoice_no: invoice.invoice_no,
