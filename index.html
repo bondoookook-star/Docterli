@@ -716,24 +716,19 @@ async function handleOrderSubmit(e) {
   $("ordBtn").disabled = true;
 
   try {
-    const { data: savedOrder, error } = await db
-      .from("orders")
-      .insert(order)
-      .select("id")
-      .single();
-
-    if (error) throw error;
-
-    const response = await fetch("/api/fino/create-invoice", {
+        const response = await fetch("/api/create-order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        amount: order.total,
-        orderId: savedOrder.id
+        name: order.name,
+        phone: order.phone,
+        address: order.address,
+        items: order.items.map((i) => ({ id: i.id, qty: i.qty }))
       })
     });
 
     const invoice = await response.json();
+    if (invoice.total) order.total = invoice.total;
 
     if (!response.ok) {
       throw new Error(
