@@ -348,7 +348,7 @@ function normalizeProduct(row) {
 }
 function normalizeOrder(row) {
 let rawItems = row.items;
-if (typeof rawItems === "string") { try { rawItems = JSON.parse(rawItems); } catch (e) {} }
+for (let k = 0; k < 2 && typeof rawItems === "string"; k++) { try { rawItems = JSON.parse(rawItems); } catch (e) { break; } }
   const itemsText = Array.isArray(rawItems) ? rawItems.map(x => `${x.name || x.product_name || "Бараа"} (${x.qty || x.quantity || 1}ш)`).join(", ") : String(rawItems || "");
   return { ...row, id: String(row.id), name: row.customer_name || row.name || "", itemsText, subtotal: Number(row.subtotal ?? 0), deliveryFee: Number(row.delivery_fee ?? row.deliveryFee ?? 0), total: Number(row.total_price || row.total || 0), paid: !!row.paid };
 }
