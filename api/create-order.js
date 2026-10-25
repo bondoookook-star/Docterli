@@ -13,6 +13,15 @@ async function handler(req, res) {
   }
 
   const body = req.body || {};
+    const ANON = "sb_publishable_bQNdfGZZvs-lldXhGhVpaA_UlofuWZ5";
+  let userId = null;
+  const auth = String(req.headers.authorization || "");
+  if (auth.startsWith("Bearer ")) {
+    try {
+      const ur = await fetch(`${sbUrl}/auth/v1/user`, { headers: { apikey: ANON, Authorization: auth } });
+      if (ur.ok) { const u = await ur.json(); userId = u && u.id ? u.id : null; }
+    } catch {}
+  }
   const name = String(body.name || "").trim().slice(0, 100);
   const phone = String(body.phone || "").trim().slice(0, 30);
   const address = String(body.address || "").trim().slice(0, 300);
@@ -59,7 +68,7 @@ async function handler(req, res) {
         name, customer_name: name, phone, address,
         items: JSON.stringify(items),
         subtotal, delivery_fee: deliveryFee, total, total_price: total,
-        paid: false, status: "Шинэ",
+                paid: false, status: "Шинэ", user_id: userId,
       }),
     });
     const irData = await ir.json();
