@@ -747,6 +747,7 @@ async function handleOrderSubmit(e) {
       ...order,
       qr: invoice.qr_image,
        invoiceNo: invoice.invoice_no,
+           orderId: invoice.order_id,
   deepLinks: invoice.deep_links || []
     });
 
@@ -790,9 +791,37 @@ $("payBanks").innerHTML = rows.map(([bank, acc, owner]) => `
   return `<a href="${esc(url)}" class="border rounded-xl p-2 text-center text-[10px] font-bold block bg-white">${img}<div class="mt-1">${esc(name)}</div></a>`;
 }).join("");
 $("payDeepLinks").innerHTML = dl ? `<p class="text-xs text-slate-500 text-center mb-2">Банкны апп сонгох</p><div class="grid grid-cols-3 gap-2">${dl}</div>` : "";
+   clearInterval(window.payTimer);
+  let ps = $("payStatus");
+  if (!ps) {
+    ps = document.createElement("p");
+    ps.id = "payStatus";
+    $("payBanks").before(ps);
+  }
+  ps.className = "text-center text-xs font-bold text-slate-500";
+  ps.textContent = "";
+  if (o.orderId) {
+    ps.textContent = "⏳ Төлбөр хүлээж байна...";
+    let tries = 0;
+    window.payTimer = setInterval(async () => {
+      tries++;
+      if (tries > 200) { clearInterval(window.payTimer); ps.textContent = ""; return; }
+      try {
+        const r = await fetch("/api/check-payment?order_id=" + encodeURIComponent(o.orderId));
+        const d = await r.json();
+        if (d.paid) {
+          clearInterval(window.payTimer);
+          ps.className = "text-center text-sm font-black text-green-600 py-2";
+          ps.textContent = "✅ Төлбөр амжилттай! Баярлалаа.";
+          $("payQr").style.display = "none";
+          $("payDeepLinks").innerHTML = "";
+        }
+      } catch (e) {}
+    }, 5000);
+  }
   $("payModal").style.display = "flex";
 }
-function closePay() { $("payModal").style.display = "none"; }
+function closePay() { clearInterval(window.payTimer); $("payModal").style.display = "none"; }
 function copyText(t, btn) {
   const done = () => { btn.innerText = "✓"; setTimeout(() => btn.innerText = "Хуулах", 1500); };
   if (navigator.clipboard) navigator.clipboard.writeText(t).then(done).catch(() => prompt("Хуулах:", t)); else prompt("Хуулах:", t);
