@@ -957,5 +957,67 @@ $x("lgOk").onclick=async()=>{const{error}=await db.auth.verifyOtp({email:$x("lgE
 $x("lgOut2").onclick=async()=>{await db.auth.signOut();authUI()};
 })();
   </script>
+  <script>
+(function(){
+const g=i=>document.getElementById(i);
+let tabK="all";
+const F={
+ all:()=>true,
+ new:p=>/шинэ|new/i.test(p.badge||""),
+ best:p=>/best/i.test(p.badge||""),
+ sale:p=>Number(p.old_price)>Number(p.price)&&Number(p.price)>0
+};
+document.querySelectorAll("button").forEach(b=>{if(b.textContent.trim()==="🔥 Хямдрал")b.style.display="none"});
+const _r=renderShopProducts;
+renderShopProducts=function(){
+ _r();
+ let n=0;
+ document.querySelectorAll("#productGrid article").forEach(a=>{
+  const b=a.querySelector('button[onclick^="addToCart("]');
+  const m=b&&b.getAttribute("onclick").match(/addToCart\('([^']+)'\)/);
+  const p=m&&products.find(x=>x.id===m[1]);
+  const ok=!p||F[tabK](p);
+  a.style.display=ok?"":"none";if(ok)n++;
+ });
+ const e=g("tabEmpty");if(e)e.style.display=n?"none":"block";
+};
+const grid=g("productGrid"),main=grid.closest("main")||grid.parentElement;
+const T=[["all","Онцлох"],["new","Шинэ"],["best","Бестселлер"],["sale","🔥 Хямдрал"]];
+const tabs=document.createElement("div");
+tabs.style.cssText="display:flex;gap:6px;overflow-x:auto;padding:10px 16px;background:#fff";
+T.forEach(([k,n])=>{const b=document.createElement("button");b.type="button";b.textContent=n;b.dataset.k=k;b.onclick=()=>{tabK=k;paint();renderShopProducts()};tabs.appendChild(b)});
+function paint(){tabs.querySelectorAll("button").forEach(b=>{const on=b.dataset.k===tabK;b.style.cssText="flex:1;white-space:nowrap;padding:8px 14px;border-radius:9999px;font-weight:800;font-size:13px;"+(on?"background:#0f172a;color:#fff":"background:#f1f5f9;color:#475569")})}
+main.before(tabs);
+const em=document.createElement("p");em.id="tabEmpty";em.style.cssText="display:none;text-align:center;color:#94a3b8;padding:48px 0;font-size:13px";em.textContent="Энэ ангилалд одоогоор бараа алга.";main.appendChild(em);
+paint();
+
+/* Доод цэс */
+g("accFab").style.display="none";g("wlFab").style.display="none";
+const nav=document.createElement("nav");
+nav.style.cssText="position:fixed;left:0;right:0;bottom:0;z-index:45;background:#fff;border-top:1px solid #e2e8f0;display:flex;justify-content:space-around;padding:6px 0 max(6px,env(safe-area-inset-bottom))";
+const items=[
+ ["🏠","Нүүр",()=>{tabK="all";paint();renderShopProducts();scrollTo({top:0,behavior:"smooth"})}],
+ ["▦","Ангилал",()=>toggleSideMenu()],
+ ["♥","Хадгалсан",()=>g("wlFab").click()],
+ ["👤","Профайл",()=>{g("accFab").click();db.auth.getUser().then(({data})=>{if(!(data&&data.user))g("tbL").click()})}]
+];
+items.forEach(([ic,nm,fn])=>{
+ const b=document.createElement("button");b.type="button";
+ b.style.cssText="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:700;color:#0f172a";
+ b.innerHTML='<span style="font-size:20px;line-height:1">'+ic+'</span>'+nm;
+ b.onclick=fn;nav.appendChild(b);
+});
+document.body.appendChild(nav);
+
+/* Нэвтрэх цонх */
+g("lgSend").textContent="Үргэлжлүүлэх";
+g("tbL").textContent="✉️ Нэвтрэх";
+const guest=document.createElement("button");
+guest.type="button";guest.textContent="👤 Зочноор үргэлжлүүлэх";
+guest.className="w-full border rounded-xl py-2.5 font-bold mt-2";
+guest.onclick=()=>{g("accX").style.display="none"};
+g("lgSend").after(guest);
+})();
+  </script>
  </body>
 </html>
