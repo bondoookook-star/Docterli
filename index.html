@@ -858,5 +858,54 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 </script>
+  <script>
+(function(){
+let wl=lsGet("dl_wish",[]),sale=false;
+const sp=p=>Number(p.old_price)>Number(p.price)&&Number(p.price)>0;
+const g=i=>document.getElementById(i);
+const _rs=renderShopProducts;
+renderShopProducts=function(){
+ const full=products;
+ if(sale)products=full.filter(sp);
+ try{_rs()}finally{products=full}
+ deco();list();
+};
+function deco(){
+ document.querySelectorAll("#productGrid article").forEach(a=>{
+  const b=a.querySelector('button[onclick^="addToCart("]');if(!b)return;
+  const m=b.getAttribute("onclick").match(/addToCart\('([^']+)'\)/);if(!m)return;
+  const id=m[1],p=products.find(x=>x.id===id);if(!p)return;
+  const img=a.querySelector(".product-image");
+  if(img){
+   const h=document.createElement("button");h.type="button";h.textContent="♥";h.setAttribute("aria-label","Хадгалах");
+   h.style.cssText="position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:9999px;background:rgba(255,255,255,.92);font-size:16px;line-height:1;color:"+(wl.includes(id)?"#f43f5e":"#94a3b8");
+   h.onclick=e=>{e.stopPropagation();toggle(id)};img.appendChild(h);
+   if(sp(p))img.insertAdjacentHTML("beforeend",'<span style="position:absolute;bottom:8px;left:8px;background:#e11d48;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:9999px">-'+Math.round((1-p.price/p.old_price)*100)+'%</span>');
+  }
+  const pr=a.querySelector(".product-price");
+  if(pr&&sp(p))pr.insertAdjacentHTML("beforeend",'<span style="display:block;font-size:10px;font-weight:600;color:#94a3b8;text-decoration:line-through">'+fmt(p.old_price)+'</span>');
+ });
+}
+function toggle(id){wl=wl.includes(id)?wl.filter(x=>x!==id):[...wl,id];lsSet("dl_wish",wl);renderShopProducts()}
+function list(){
+ g("wlN").textContent=wl.length;
+ const l=products.filter(p=>wl.includes(p.id));
+ g("wlList").innerHTML=l.length?l.map(p=>'<div class="flex items-center gap-3 p-2 bg-slate-50 rounded-2xl border mt-2"><img src="'+esc(p.img)+'" style="width:56px;height:56px;object-fit:cover;border-radius:12px"><div class="flex-1 min-w-0"><div class="font-bold truncate">'+esc(p.name)+'</div><div class="font-black">'+fmt(p.price)+'</div></div><div class="flex flex-col gap-1"><button data-a="'+p.id+'" class="bg-slate-900 text-white px-2 py-1 rounded-lg font-bold">+ Сагс</button><button data-r="'+p.id+'" class="text-rose-500 font-bold">Хасах</button></div></div>').join(""):'<p class="text-center text-slate-400 py-10">Хадгалсан бараа алга. Бараан дээрх ♥ дарна уу.</p>';
+ g("wlList").querySelectorAll("[data-a]").forEach(x=>x.onclick=()=>addToCart(x.dataset.a));
+ g("wlList").querySelectorAll("[data-r]").forEach(x=>x.onclick=()=>toggle(x.dataset.r));
+}
+const w=document.createElement("div");
+w.innerHTML=`<button id="wlFab" style="position:fixed;left:72px;bottom:14px;z-index:40;height:48px;padding:0 16px;border-radius:9999px;background:#fff;border:1px solid #e2e8f0;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.15)">♥ <span id="wlN">0</span></button>
+<div id="wlX" style="display:none;position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.6);align-items:center;justify-content:center;padding:16px"><div class="bg-white rounded-3xl w-full max-w-md p-5 text-xs" style="max-height:90vh;overflow-y:auto"><div class="flex justify-between border-b pb-2"><b class="text-sm">♥ Хадгалсан бараа</b><button id="wlClose">✕</button></div><div id="wlList"></div></div></div>`;
+document.body.appendChild(w);
+g("wlFab").onclick=()=>{list();g("wlX").style.display="flex"};
+g("wlClose").onclick=()=>g("wlX").style.display="none";
+const chip=document.createElement("button");chip.type="button";chip.textContent="🔥 Хямдрал";
+chip.style.cssText="margin-top:8px;padding:6px 14px;border-radius:9999px;border:1px solid #e2e8f0;font-size:12px;font-weight:700";
+chip.onclick=()=>{sale=!sale;chip.style.background=sale?"#0f172a":"";chip.style.color=sale?"#fff":"";renderShopProducts()};
+const si=g("searchInput");if(si&&si.parentElement)si.parentElement.after(chip);
+renderShopProducts();
+})();
+  </script>
  </body>
 </html>
