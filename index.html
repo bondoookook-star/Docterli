@@ -907,5 +907,55 @@ const si=g("searchInput");if(si&&si.parentElement)si.parentElement.after(chip);
 renderShopProducts();
 })();
   </script>
+  <script>
+(function(){
+const DLB={new:"Захиалга хүлээн авсан",preparing:"Бэлтгэж байна",shipped:"Хүргэлтэнд гарсан",delivered:"Хүргэгдсэн"};
+const H=()=>lsGet("dl_orders",[]);
+const _sp=showPayment;
+showPayment=function(o){
+ try{if(o&&o.orderId){
+  const ex=H().find(x=>String(x.orderId)===String(o.orderId))||{};
+  const l=H().filter(x=>String(x.orderId)!==String(o.orderId));
+  l.unshift({orderId:o.orderId,total:o.total,phone:o.phone,address:o.address,qr:o.qr||"",deepLinks:o.deepLinks||[],paid:!!ex.paid,delivery:ex.delivery||"new",createdAt:ex.createdAt||new Date().toISOString(),itemsText:(o.items||[]).map(i=>i.name+" ("+i.qty+"ш)").join(", ")});
+  lsSet("dl_orders",l.slice(0,30));
+ }}catch(e){}
+ _sp(o);
+};
+const w=document.createElement("div");
+w.innerHTML=`<button id="accFab" style="position:fixed;left:14px;bottom:14px;z-index:40" class="bg-slate-900 text-white w-12 h-12 rounded-full text-xl shadow-lg">👤</button>
+<div id="accX" style="display:none;position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.6);align-items:center;justify-content:center;padding:16px">
+ <div class="bg-white rounded-3xl w-full max-w-md p-5 text-xs" style="max-height:90vh;overflow-y:auto">
+  <div class="flex justify-between border-b pb-2"><b class="text-sm">Миний бүртгэл</b><button id="accClose">✕</button></div>
+  <div class="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-xl font-bold my-3"><button id="tbO" class="py-2 rounded-lg">📦 Захиалгууд</button><button id="tbL" class="py-2 rounded-lg">✉️ Имэйл</button></div>
+  <div id="pnO"></div>
+  <div id="pnL" style="display:none">
+   <div id="lgOut"><p class="text-slate-600">Нууц үг хэрэггүй. Имэйлээ оруулаад ирсэн кодоор нэвтэрнэ.</p>
+    <input id="lgEm" type="email" placeholder="Имэйл хаяг" class="w-full border rounded-xl p-2.5 mt-2">
+    <button id="lgSend" class="w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold mt-2">Код авах</button>
+    <div id="lgBox" style="display:none"><input id="lgCode" placeholder="Имэйлд ирсэн код" class="w-full border rounded-xl p-2.5 mt-2 text-center font-black tracking-widest"><button id="lgOk" class="w-full bg-emerald-700 text-white py-2.5 rounded-xl font-bold mt-2">Нэвтрэх</button></div></div>
+   <div id="lgIn" style="display:none" class="text-center"><p class="text-slate-400">Нэвтэрсэн имэйл</p><p id="lgShow" class="font-black text-sm"></p><button id="lgOut2" class="w-full border border-red-200 text-red-600 py-2 rounded-xl font-bold mt-3">Гарах</button></div>
+  </div></div></div>`;
+document.body.appendChild(w);
+const $x=i=>document.getElementById(i);
+function tab(t){$x("pnO").style.display=t==="o"?"block":"none";$x("pnL").style.display=t==="l"?"block":"none";$x("tbO").style.cssText=t==="o"?"background:#0f172a;color:#fff":"";$x("tbL").style.cssText=t==="l"?"background:#0f172a;color:#fff":"";if(t==="o")orders()}
+async function orders(){
+ const b=$x("pnO");let l=H();
+ if(!l.length){b.innerHTML='<p class="text-center text-slate-400 py-8">Захиалгын түүх алга.</p>';return}
+ b.innerHTML='<p class="text-center text-slate-400 py-6">Ачааллаж байна...</p>';
+ await Promise.all(l.filter(o=>o.orderId).map(async o=>{try{const r=await fetch("/api/check-payment?order_id="+encodeURIComponent(o.orderId));const d=await r.json();if(d.paid)o.paid=true;if(d.delivery_status)o.delivery=d.delivery_status}catch(e){}}));
+ lsSet("dl_orders",l);
+ b.innerHTML=l.map(o=>{const exp=!o.paid&&Date.now()-new Date(o.createdAt).getTime()>900000;
+  return '<div class="border rounded-2xl p-3 bg-slate-50 mb-2"><div class="flex justify-between"><span class="text-slate-400 font-bold">'+esc(new Date(o.createdAt).toLocaleString("mn-MN",{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}))+'</span><b class="'+(o.paid?"text-emerald-600":"text-amber-600")+'">'+(o.paid?"✓ Төлсөн":"⏳ Төлөөгүй")+'</b></div><div class="font-bold mt-1">'+esc(o.itemsText)+'</div>'+(o.paid?'<div class="font-bold text-slate-700 mt-1">🚚 '+DLB[o.delivery||"new"]+'</div>':"")+'<div class="flex justify-between items-center border-t mt-2 pt-2"><b class="text-sm">'+fmt(o.total)+'</b>'+(!o.paid&&!exp?'<button data-re="'+esc(o.orderId)+'" class="bg-slate-900 text-white px-3 py-1.5 rounded-lg font-bold">Төлөх / Шалгах</button>':"")+(exp?'<span class="text-rose-500 font-bold">QR хугацаа дууссан</span>':"")+'</div></div>'}).join("");
+ b.querySelectorAll("[data-re]").forEach(x=>x.onclick=()=>{const o=H().find(y=>String(y.orderId)===x.dataset.re);if(o){$x("accX").style.display="none";showPayment(o)}});
+}
+async function authUI(){const{data}=await db.auth.getUser();const u=data&&data.user;$x("lgOut").style.display=u?"none":"block";$x("lgIn").style.display=u?"block":"none";$x("lgShow").textContent=u?u.email:""}
+$x("accFab").onclick=()=>{$x("accX").style.display="flex";authUI();tab("o")};
+$x("accClose").onclick=()=>$x("accX").style.display="none";
+$x("tbO").onclick=()=>tab("o");$x("tbL").onclick=()=>tab("l");
+$x("lgSend").onclick=async()=>{const email=$x("lgEm").value.trim();if(!email.includes("@"))return alert("Зөв имэйл оруулна уу!");const{error}=await db.auth.signInWithOtp({email,options:{shouldCreateUser:true}});if(error)return alert("Алдаа: "+error.message);$x("lgBox").style.display="block";alert("Имэйл рүү код илгээлээ. Spam хавтсаа ч шалгаарай.")};
+$x("lgOk").onclick=async()=>{const{error}=await db.auth.verifyOtp({email:$x("lgEm").value.trim(),token:$x("lgCode").value.trim(),type:"email"});if(error)return alert("Код буруу эсвэл хугацаа дууссан");authUI();alert("Амжилттай нэвтэрлээ!")};
+$x("lgOut2").onclick=async()=>{await db.auth.signOut();authUI()};
+})();
+  </script>
  </body>
 </html>
