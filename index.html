@@ -1043,5 +1043,26 @@ s.replaceWith(i);
 #sideMenuDrawer button.bg-slate-900,
 #sideMenuDrawer button.bg-slate-900 *{color:#fff!important}
   </style>
+  <style>
+@media(min-width:1024px){
+ html{font-size:18px}
+ body{padding-bottom:110px}
+ .wrap{max-width:1500px!important}
+ header{min-height:96px!important;padding-left:32px!important;padding-right:32px!important}
+ header img{height:64px!important}
+ #productGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:28px!important}
+ .product-card{padding:14px!important;border-radius:24px!important}
+ .product-name{font-size:17px!important}
+ .product-desc{font-size:14px!important;min-height:4em!important}
+ .product-price{font-size:20px!important}
+ [class*="text-[10px]"]{font-size:13px!important}
+ [class*="text-[11px]"]{font-size:14px!important}
+ #pinnedBannerImg{max-height:560px}
+ #sideMenuDrawer>div{width:440px!important}
+ #sideMenuDrawer .cat-item,#sideMenuDrawer button{font-size:16px!important;min-height:52px!important}
+ #cartDrawer>div,#wishlistDrawer>div{max-width:480px!important}
+ nav[style*="fixed"]{left:50%!important;right:auto!important;transform:translateX(-50%);width:560px;bottom:16px!important;border:1px solid #e2e8f0;border-radius:9999px;box-shadow:0 8px 30px rgba(0,0,0,.15)}
+}
+  </style>
  </body>
 </html>
