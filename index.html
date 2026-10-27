@@ -375,7 +375,7 @@ const CATS = [
   ["menuProblem","Арьсны асуудал","fa-solid fa-shield-heart",[["prob_acne","Батгашилт"],["prob_pore","Нүхжилт"],["prob_spot","Сэвх нөсөө толбо"],["prob_wrinkle","Үрчлээ"],["prob_dry","Хуурайшилт"]]],
   ["menuBody","Бие арчилгаа","fa-solid fa-shower",[["body_wash","Бие угаагч"],["body_scrub","Биеийн гуужуулагч"],["body_lotion","Биеийн тос"],["body_handcream","Гарын тос"]]],
   ["menuHair","Үс арчилгаа","fa-solid fa-wand-magic-sparkles",[["shampoo","Шампунь"],["conditioner","Ангижруулагч"],["hair_mask","Үсний маск"]]],
-  ["menuAcc","Дагалдах хэрэгсэл","fa-solid fa-gem",[["cotton","Хөвөн"],["massage_comb","Массажны сам"]]]
+  ["menuAcc","Дагалдах хэрэгсэл","fa-solid fa-gem",[["cotton","Бусад"],["massage_comb","Массажны сам"]]]
 ];
 const DEFAULT_IMG = "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500";
 
@@ -1019,5 +1019,25 @@ guest.onclick=()=>{g("accX").style.display="none"};
 g("lgSend").after(guest);
 })();
   </script>
+  <script>
+(function(){
+const s=document.querySelector('[onclick="triggerAdminModal()"] svg');
+if(!s)return;
+const i=document.createElement("img");
+i.src="/logo.png";i.alt="Doctor Li Laboratories";
+i.style.cssText="height:44px;width:auto;max-width:62vw;object-fit:contain;pointer-events:none";
+i.onerror=()=>i.replaceWith(s);
+s.replaceWith(i);
+})();
+  </script>
+  <style>
+#aboutModal>div{max-width:32rem!important;padding:28px!important;background:#fff!important;font-size:14px!important;line-height:1.75!important;color:#334155!important}
+#aboutModal>div>div.bg-slate-900{background:#f1f5f9!important;border:1px solid #e2e8f0;padding:16px!important}
+#aboutModal>div>div.bg-slate-900 *{color:#0f172a!important}
+#aboutModal>div>div.bg-slate-900 span{font-size:12px!important}
+#aboutModal h3{font-size:19px!important}
+#aboutModal h4{font-size:17px!important}
+#aboutModal p{font-size:14px!important}
+  </style>
  </body>
 </html>
