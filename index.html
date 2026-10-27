@@ -1064,5 +1064,109 @@ s.replaceWith(i);
  nav[style*="fixed"]{left:50%!important;right:auto!important;transform:translateX(-50%);width:560px;bottom:16px!important;border:1px solid #e2e8f0;border-radius:9999px;box-shadow:0 8px 30px rgba(0,0,0,.15)}
 }
   </style>
+  
+<style>
+/* DOCTOR LI - DESKTOP DESIGN UPGRADE */
+
+@media (min-width: 768px) {
+  #shopMainView {
+    max-width: 1500px !important;
+    margin: 0 auto !important;
+    box-shadow: 0 8px 45px rgba(15, 23, 42, 0.08);
+  }
+
+  #shopMainView > div:nth-of-type(2) {
+    padding: 28px 36px !important;
+  }
+
+  #shopMainView main.p-4 {
+    padding: 30px 36px !important;
+  }
+
+  #pinnedBannerImg {
+    width: 100% !important;
+    max-height: 440px !important;
+    object-fit: cover !important;
+  }
+
+  #defaultBannerContent {
+    min-height: 240px;
+    padding: 44px !important;
+    border-radius: 20px !important;
+  }
+
+  #defaultBannerContent h2 {
+    font-size: 30px !important;
+    line-height: 1.25 !important;
+  }
+
+  #defaultBannerContent p {
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+  }
+
+  #currentCategoryTitle {
+    font-size: 20px !important;
+  }
+
+  #searchInput {
+    min-height: 50px !important;
+    font-size: 14px !important;
+  }
+
+  #productGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 22px !important;
+  }
+
+  .product-card {
+    padding: 14px !important;
+    border-radius: 20px !important;
+  }
+
+  .product-image {
+    margin-bottom: 14px !important;
+    border-radius: 14px !important;
+  }
+
+  .product-name {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+  }
+
+  .product-desc {
+    font-size: 12px !important;
+    line-height: 1.7 !important;
+  }
+
+  .product-price {
+    font-size: 17px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  #productGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 24px !important;
+  }
+}
+
+@media (min-width: 1360px) {
+  #productGrid {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 22px !important;
+  }
+}
+
+/* MOBILE DESIGN PRESERVED */
+@media (max-width: 767px) {
+  #productGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+</style>
+</body>
+</html>
+
  </body>
 </html>
