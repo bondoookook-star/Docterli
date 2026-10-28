@@ -1165,8 +1165,82 @@ s.replaceWith(i);
   }
 }
 </style>
-</body>
-</html>
+<script>
+(function(){
+const g=i=>document.getElementById(i);
+const has=(p,k)=>(p.category||"").split(",").map(c=>c.trim()).includes(k);
+
+document.addEventListener("DOMContentLoaded",function(){
+ const mp=g("menuProblem");
+ if(mp&&mp.parentElement){
+  const b=document.createElement("button");b.type="button";b.dataset.key="set_product";
+  b.textContent="🎁 Сет бүтээгдэхүүн";
+  b.className="cat-item w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold border border-slate-200 bg-white";
+  b.onclick=()=>selectCategory("set_product","🎁 Сет бүтээгдэхүүн");
+  mp.parentElement.after(b);
+ }
+ const box=g("catCheckboxes");
+ if(box){
+  [["featured","⭐ Онцлох бараа"],["set_product","🎁 Сет бүтээгдэхүүн"]].forEach(([k,n])=>{
+   const l=document.createElement("label");
+   l.innerHTML='<input type="checkbox" name="catOption" value="'+k+'"> '+n;
+   box.appendChild(l);
+  });
+  const inp=document.createElement("input");
+  inp.id="prodOldPriceInput";inp.type="number";
+  inp.placeholder="Хуучин үнэ ₮ (хямдрал бол үнээс өндөр тоо бич)";
+  inp.className="w-full border rounded-xl p-2";
+  box.parentElement.before(inp);
+ }
+});
+
+const _from=db.from.bind(db);
+db.from=function(t){
+ const q=_from(t);
+ if(t!=="products")return q;
+ const ins=q.insert.bind(q),upd=q.update.bind(q);
+ const w=d=>{
+  if(d&&typeof d==="object"&&!Array.isArray(d)&&"title" in d){
+   const el=g("prodOldPriceInput");const o=el?Number(el.value):0;
+   d.old_price=o>Number(d.price)?o:null;
+  }
+  return d;
+ };
+ q.insert=d=>ins(w(d));q.update=d=>upd(w(d));
+ return q;
+};
+
+const _ed=editProduct;
+editProduct=function(id){
+ _ed(id);
+ const p=products.find(x=>x.id===id),el=g("prodOldPriceInput");
+ if(el)el.value=p&&p.old_price?p.old_price:"";
+};
+const _rf=resetProductForm;
+resetProductForm=function(){
+ _rf();
+ const el=g("prodOldPriceInput");if(el)el.value="";
+};
+
+const _r=renderShopProducts;
+renderShopProducts=function(){
+ _r();
+ const grid=g("productGrid");if(!grid)return;
+ const feat=[];
+ grid.querySelectorAll("article").forEach(a=>{
+  const b=a.querySelector('button[onclick^="addToCart("]');
+  const m=b&&b.getAttribute("onclick").match(/addToCart\('([^']+)'\)/);
+  const p=m&&products.find(x=>x.id===m[1]);
+  if(p&&has(p,"featured")){
+   feat.push(a);
+   const im=a.querySelector(".product-image");
+   if(im&&!im.querySelector(".ftag"))im.insertAdjacentHTML("beforeend",'<span class="ftag" style="position:absolute;bottom:8px;right:8px;background:#f59e0b;color:#fff;font-size:10px;font-weight:900;padding:2px 8px;border-radius:9999px">⭐ Онцлох</span>');
+  }
+ });
+ feat.reverse().forEach(a=>grid.prepend(a));
+};
+})();
+</script>
 
  </body>
 </html>
